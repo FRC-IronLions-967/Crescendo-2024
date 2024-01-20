@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -12,32 +13,36 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Utils.Constants;
 
 public class ScorerSubsystem extends SubsystemBase {
 
   private CANSparkMax scorerMotor;
-  private CANSparkMax scorerPivotMotor;
+  private CANSparkMax pivotMotor;
   private CANSparkMax feederMotor;
   private SparkPIDController scorerMotorPID;
-  private SparkPIDController scorerPivotMotorPID;
+  private SparkPIDController pivotMotorPID;
   private SparkPIDController feederMotorPID;
   private DigitalInput feederLimit1; 
   private DigitalInput feederLimit2;
+  private boolean hasNote;
   /** Creates a new ScorerSubsystem. */
   public ScorerSubsystem() {
     scorerMotor = new CANSparkMax(11, MotorType.kBrushless);
-    scorerPivotMotor = new CANSparkMax(12, MotorType.kBrushless);
+    pivotMotor = new CANSparkMax(12, MotorType.kBrushless);
     feederMotor = new CANSparkMax(13, MotorType.kBrushless);
     scorerMotorPID = scorerMotor.getPIDController();
     scorerMotorPID.setP(1);
     scorerMotorPID.setI(0);
     scorerMotorPID.setD(0);
     scorerMotorPID.setFF(0);
-    scorerPivotMotorPID = scorerPivotMotor.getPIDController();
-    scorerPivotMotorPID.setP(1);
-    scorerPivotMotorPID.setI(0);
-    scorerPivotMotorPID.setD(0);
-    scorerPivotMotorPID.setFF(0);
+    pivotMotorPID = pivotMotor.getPIDController();
+    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(360.0);
+    pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
+    pivotMotorPID.setP(1);
+    pivotMotorPID.setI(0);
+    pivotMotorPID.setD(0);
+    pivotMotorPID.setFF(0);
     feederMotorPID = feederMotor.getPIDController();
     feederMotorPID.setP(1);
     feederMotorPID.setI(0);
@@ -56,15 +61,20 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setReference(0, ControlType.kVelocity);
   }
 
-  public void moveShooter(double speed) {
+  public void moveShooter(double position) {
+    if(position < Constants.kScorerMinPosition) position = Constants.kScorerMinPosition;
+    if(position > Constants.kScorerMaxPosition) position = Constants.kScorerMaxPosition;
+  
+    pivotMotorPID.setReference(position, ControlType.kPosition);
+  }
 
+  public boolean isNoteIn() {
+    return hasNote;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (feederLimit1.get() || feederLimit2.get()) {
-      feederMotorPID.setReference(0, ControlType.kVelocity);
-    }
+    if (feederLimit1.get() || feederLimit2.get()) hasNote = true;
   }
 }
