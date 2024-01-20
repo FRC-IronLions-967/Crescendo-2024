@@ -13,7 +13,6 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
 

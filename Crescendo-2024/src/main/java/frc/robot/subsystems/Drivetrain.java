@@ -26,7 +26,6 @@ import frc.robot.lib.controls.XBoxController;
 
 /** Represents a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
-  private int i;
   public boolean fieldRelative;
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
@@ -56,7 +55,6 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     m_gyro.reset();
     fieldRelative = true;
-    i = 0;
   }
 
   /**

@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
@@ -14,8 +13,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
 public class ScorerSubsystem extends SubsystemBase {
