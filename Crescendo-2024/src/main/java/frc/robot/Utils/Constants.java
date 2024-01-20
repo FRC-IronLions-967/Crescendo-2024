@@ -51,12 +51,17 @@ public final class Constants {
       kSwerveOffsets.put(3, 0.23217007031624007);
     }
 
+
     // TODO tune this for actual hardware
     // all values are in degrees
     public static final double kIntakeMaxPosition = 90.0;
     public static final double kIntakeMinPosition = 0.0;
+  
+    public static final double kScorerMaxPosition = 90.0;
+    public static final double kScorerMinPosition = 0.0;
 
     // all values are in RPM
     public static final double kMinNEOSpeed = 0.0;
     public static final double kMaxNEOSpeed = 5676.0;
+
 }
