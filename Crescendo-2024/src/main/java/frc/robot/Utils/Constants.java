@@ -50,4 +50,7 @@ public final class Constants {
       kSwerveOffsets.put(2, -2.7157190558997755);
       kSwerveOffsets.put(3, 0.23217007031624007);
     }
+
+    public static final double kScorerMaxPosition = 90.0;
+    public static final double kScorerMinPosition = 0.0;
 }
