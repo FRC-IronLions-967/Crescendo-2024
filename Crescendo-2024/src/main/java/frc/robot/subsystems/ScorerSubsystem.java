@@ -52,8 +52,11 @@ public class ScorerSubsystem extends SubsystemBase {
     feederLimit2 = new DigitalInput(4);
   }
 
-  public void runScorer() {
-    scorerMotorPID.setReference(1, ControlType.kVelocity);
+  public void runScorer(double speed) {
+    if(speed < -Constants.kMaxNEOSpeed) speed = -Constants.kMaxNEOSpeed;
+    if(speed > Constants.kMaxNEOSpeed) speed = Constants.kMaxNEOSpeed;
+
+    scorerMotorPID.setReference(speed, ControlType.kVelocity);
     new WaitCommand(0.5);
     feederMotorPID.setReference(1, ControlType.kVelocity);
     new WaitCommand(0.5);
@@ -61,11 +64,22 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setReference(0, ControlType.kVelocity);
   }
 
+  public void runFeeder(double speed) {
+    if(speed < -Constants.kMaxNEOSpeed) speed = -Constants.kMaxNEOSpeed;
+    if(speed > Constants.kMaxNEOSpeed) speed = Constants.kMaxNEOSpeed;
+
+    feederMotorPID.setReference(1, ControlType.kVelocity);
+  }
+
   public void moveShooter(double position) {
     if(position < Constants.kScorerMinPosition) position = Constants.kScorerMinPosition;
     if(position > Constants.kScorerMaxPosition) position = Constants.kScorerMaxPosition;
   
     pivotMotorPID.setReference(position, ControlType.kPosition);
+  }
+
+  public double getScorerPosition() {
+    return pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition();
   }
 
   public boolean isNoteIn() {

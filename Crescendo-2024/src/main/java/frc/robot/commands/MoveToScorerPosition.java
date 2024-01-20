@@ -8,10 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Constants;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunScorerCommand extends Command {
-  /** Creates a new RunScorerCommand. */
-  public RunScorerCommand() {
+public class MoveToScorerPosition extends Command {
+  /** Creates a new TogglescorerPositionCommand. */
+  public MoveToScorerPosition() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -21,13 +22,9 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() == Constants.kScorerMinPosition) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(Constants.kMaxNEOSpeed);
-    }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(Constants.kMaxNEOSpeed / 2);   
-    }
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(Constants.kScorerMinPosition);
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
