@@ -6,11 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class RunScorerCommand extends Command {
   /** Creates a new RunScorerCommand. */
+  private double kMaxNEOSpeed;
+  private double tolerance;
+  private double kScorerMaxPosition;
   public RunScorerCommand() {
+    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
+    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -21,11 +29,12 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() == Constants.kScorerMinPosition) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(Constants.kMaxNEOSpeed);
+    if(kScorerMaxPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() <= kScorerMaxPosition + tolerance) {
+      SubsystemsInstance.getInstance().scorersubsystem.runScorer(kMaxNEOSpeed);
     }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(Constants.kMaxNEOSpeed / 2);   
+      SubsystemsInstance.getInstance().scorersubsystem.runScorer(kMaxNEOSpeed / 2);   
     }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +44,6 @@ public class RunScorerCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

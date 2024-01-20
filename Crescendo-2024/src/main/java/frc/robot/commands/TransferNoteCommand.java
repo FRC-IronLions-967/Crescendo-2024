@@ -6,12 +6,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveToAmpPosition extends Command {
-  /** Creates a new TogglescorerPositionCommand. */
-  public MoveToAmpPosition() {
+public class TransferNoteCommand extends Command {
+  /** Creates a new TransferNote. */
+  private double kMaxNEOSpeed;
+  public TransferNoteCommand() {
+    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
@@ -22,16 +26,20 @@ public class MoveToAmpPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(Constants.kScorerMaxPosition);
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-kMaxNEOSpeed / 4);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(kMaxNEOSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
   }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -24,10 +25,17 @@ public class IntakeSubsystem extends SubsystemBase {
   private SparkPIDController pivotMotorPID;
   private DigitalInput isNoteIn;
   private boolean hasNote;  
+  private double kIntakeMaxPosition;
+  private double kIntakeMinPosition;
+  private double kMaxNEOSpeed;
 
   public boolean intakePostionOut;
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
+    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
+    kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
+    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
+
     intakeMotor = new CANSparkMax(9, MotorType.kBrushless);
     intakeMotorPID = intakeMotor.getPIDController();
     intakeMotorPID.setP(1.0);
@@ -49,15 +57,15 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   
   public void runIntake(double speed) {
-    if(speed < -Constants.kMaxNEOSpeed) speed = -Constants.kMaxNEOSpeed;
-    if(speed > Constants.kMaxNEOSpeed) speed = Constants.kMaxNEOSpeed;
+    if(speed < -kMaxNEOSpeed) speed = -kMaxNEOSpeed;
+    if(speed > kMaxNEOSpeed) speed = kMaxNEOSpeed;
 
     intakeMotorPID.setReference(speed, ControlType.kVelocity);
   }
 
   public void moveIntake(double position) {
-    if(position < Constants.kIntakeMinPosition) position = Constants.kIntakeMinPosition;
-    if(position > Constants.kIntakeMaxPosition) position = Constants.kIntakeMaxPosition;
+    if(position < kIntakeMinPosition) position = kIntakeMinPosition;
+    if(position > kIntakeMaxPosition) position = kIntakeMaxPosition;
   
     pivotMotorPID.setReference(position, ControlType.kPosition);
   }

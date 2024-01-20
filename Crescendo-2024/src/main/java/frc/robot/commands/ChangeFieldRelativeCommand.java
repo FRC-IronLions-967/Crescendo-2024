@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class ChangeFieldRelativeCommand extends CommandBase {
+public class ChangeFieldRelativeCommand extends Command {
     
 public ChangeFieldRelativeCommand() {
 

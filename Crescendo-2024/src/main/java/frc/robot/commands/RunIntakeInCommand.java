@@ -6,13 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class RunIntakeInCommand extends Command {
+  private double kIntakeMaxPosition;
+  private double tolerance;
+  private double kMaxNEOSpeed;
   /** Creates a new RunIntakeInCommand. */
   public RunIntakeInCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
+    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
+    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
   }
 
   // Called when the command is initially scheduled.
@@ -22,8 +29,8 @@ public class RunIntakeInCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() == Constants.kIntakeMaxPosition) {
-      SubsystemsInstance.getInstance().intakesubsystem.runIntake(Constants.kMaxNEOSpeed);
+    if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
+      SubsystemsInstance.getInstance().intakesubsystem.runIntake(kMaxNEOSpeed);
     }
   }
 
