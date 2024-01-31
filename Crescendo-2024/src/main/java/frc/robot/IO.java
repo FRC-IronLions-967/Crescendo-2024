@@ -22,19 +22,19 @@ public static IO getInstance() {
 }
 public void teleopInit(){
 //put commands here
-driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
-Command intakeNote = new SequentialCommandGroup(
-    new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
-    new RunIntakeInCommand(),
-    new RetractIntakeCommand(),
-    new TransferNoteCommand()
-);
-Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
-manipulatorController.whenButtonPressed("B", intakeNote);
-manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
-manipulatorController.whenButtonPressed("Y", new RunScorerCommand());
-manipulatorController.whenButtonPressed("X", scoreIntoAmp);
-   
+    driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
+    Command intakeNote = new SequentialCommandGroup(
+        new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
+        new RunIntakeInCommand(),
+        new RetractIntakeCommand(),
+        new TransferNoteCommand()
+    );
+    Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
+    manipulatorController.whenButtonPressed("B", intakeNote);
+    manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
+    manipulatorController.whenButtonPressed("Y", new RunScorerCommand());
+    manipulatorController.whenButtonPressed("X", scoreIntoAmp);
+    
 }
 public XBoxController getDriverController(){
     return driverController;
