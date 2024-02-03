@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Values;
 
@@ -102,39 +103,47 @@ public class ScorerSubsystem extends SubsystemBase {
     return hasNote;
   }
 
+  public void moveFlyWheel(double speed) {
+    scorerMotorPID.setReference(speed, ControlType.kVelocity);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    switch (state) {
-      case IDLE:
-        feederMotorPID.setReference(0, ControlType.kVelocity);
-        scorerMotorPID.setReference(0, ControlType.kVelocity);
-        if (startScorer) {
-          state = ScorerStates.RAMP_UP;
-        }
-        break;
-      case RAMP_UP:
-      scorerMotorPID.setReference(speed, ControlType.kVelocity);
-        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
-          state = ScorerStates.SHOOT;
-        break;
-      case SHOOT:
-      feederMotorPID.setReference(kMaxNEOSpeed / 4, ControlType.kVelocity);
-        if (!feederLimit1.get() && !feederLimit2.get()) {
-          state = ScorerStates.DELAY;
-          timer.start();
-        }
-        break;
-      case DELAY:
-        if (timer.hasElapsed(0.5)) {
-          state = ScorerStates.IDLE;
-          startScorer = false;
-        }
-        break;
-      default:
-        state = ScorerStates.IDLE;
-        startScorer = false;
-    }
+    // switch (state) {
+    //   case IDLE:
+    //     feederMotorPID.setReference(0, ControlType.kVelocity);
+    //     scorerMotorPID.setReference(0, ControlType.kVelocity);
+    //     if (startScorer) {
+    //       state = ScorerStates.RAMP_UP;
+    //     }
+    //     break;
+    //   case RAMP_UP:
+    //   scorerMotorPID.setReference(speed, ControlType.kVelocity);
+    //     if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
+    //       state = ScorerStates.SHOOT;
+    //     break;
+    //   case SHOOT:
+    //   feederMotorPID.setReference(kMaxNEOSpeed / 4, ControlType.kVelocity);
+    //     if (!feederLimit1.get() && !feederLimit2.get()) {
+    //       state = ScorerStates.DELAY;
+    //       timer.start();
+    //     }
+    //     break;
+    //   case DELAY:
+    //     if (timer.hasElapsed(0.5)) {
+    //       state = ScorerStates.IDLE;
+    //       startScorer = false;
+    //     }
+    //     break;
+    //   default:
+    //     state = ScorerStates.IDLE;
+    //     startScorer = false;
+    // }
     if (feederLimit1.get() || feederLimit2.get()) hasNote = true;
+    SmartDashboard.putNumber("Shooter Angle", pivotMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
+
   }
 }
