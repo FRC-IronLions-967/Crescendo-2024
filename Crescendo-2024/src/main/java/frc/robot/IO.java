@@ -23,18 +23,25 @@ public static IO getInstance() {
 public void teleopInit(){
 //put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
-Command intakeNote = new SequentialCommandGroup(
-    new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
-    new RunIntakeInCommand(),
-    new RetractIntakeCommand(),
-    new TransferNoteCommand()
-);
-Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
-manipulatorController.whenButtonPressed("B", intakeNote);
-manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
-manipulatorController.whenButtonPressed("Y", new RunScorerCommand());
-manipulatorController.whenButtonPressed("X", scoreIntoAmp);
-   
+// Command intakeNote = new SequentialCommandGroup(
+//     new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
+//     new RunIntakeInCommand(),
+//     new RetractIntakeCommand(),
+//     new TransferNoteCommand()
+// );
+// Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
+// manipulatorController.whenButtonPressed("B", intakeNote);
+// manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
+// manipulatorController.whenButtonPressed("Y", new RunScorerCommand());
+// manipulatorController.whenButtonPressed("X", scoreIntoAmp);
+// manipulatorController.whenButtonPressed("A", new TestRunScorer(5600));
+// manipulatorController.whenButtonReleased("A", new TestRunScorer(0));
+// manipulatorController.whenButtonPressed("B", new TestRunFeeder(2000));
+// manipulatorController.whenButtonReleased("B", new TestRunFeeder(0));
+// manipulatorController.whenButtonPressed("X", new TestMoveScorer(75));
+// manipulatorController.whenButtonReleased("X", new TestMoveScorer(52));
+manipulatorController.whenButtonPressed("Y", new RunIntakeInCommand());
+manipulatorController.whenButtonPressed("A", new TestRunIntake(0));
 }
 public XBoxController getDriverController(){
     return driverController;

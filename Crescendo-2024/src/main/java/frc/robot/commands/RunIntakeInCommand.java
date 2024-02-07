@@ -28,9 +28,9 @@ public class RunIntakeInCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
-      SubsystemsInstance.getInstance().intakesubsystem.runIntake(kMaxNEOSpeed);
-    }
+    // if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
+      SubsystemsInstance.getInstance().intakesubsystem.runIntake(3000);
+    // }
   }
 
   // Called once the command ends or is interrupted.

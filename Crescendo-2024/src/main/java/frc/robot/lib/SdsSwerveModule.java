@@ -20,8 +20,17 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 
 public class SdsSwerveModule {
+
+  private double swerveTurningP;
+  private double swerveTurningI;
+  private double swerveTurningD;
+  private double swerveDriveMotorP;
+  private double swerveDriveMotorI;
+  private double swerveDriveMotorD;
+  private double swerveDriveMotorFF;
 
   private CANSparkMax driveMotor;
   private SparkMaxPIDController driveMotorController;
@@ -59,6 +68,14 @@ public class SdsSwerveModule {
     driveMotor.setIdleMode(IdleMode.kCoast);
 
     turningPIDController.setTolerance(0.02,0.0);
+
+    swerveTurningP = Values.getInstance().getDoubleValue("swerveTurningP");
+    swerveTurningI = Values.getInstance().getDoubleValue("swerveTurningI");
+    swerveTurningD = Values.getInstance().getDoubleValue("swerveTurningD");
+    swerveDriveMotorP = Values.getInstance().getDoubleValue("swerveDriveMotorP");
+    swerveDriveMotorI = Values.getInstance().getDoubleValue("swerveDriveMotorI");
+    swerveDriveMotorD = Values.getInstance().getDoubleValue("swerveDriveMotorD");
+    swerveDriveMotorFF = Values.getInstance().getDoubleValue("swerveDriveMotorFF");
     
 
     //REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
@@ -74,17 +91,17 @@ public class SdsSwerveModule {
     //driveMotor.getEncoder().setVelocityConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     //driveMotor.getEncoder().setPositionConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     driveMotorController = driveMotor.getPIDController();
-    driveMotorController.setP(0.08);
-    driveMotorController.setI(0.0);
-    driveMotorController.setD(0.025);
-    driveMotorController.setFF(0.35);
+    driveMotorController.setP(swerveDriveMotorP);
+    driveMotorController.setI(swerveDriveMotorI);
+    driveMotorController.setD(swerveDriveMotorD);
+    driveMotorController.setFF(swerveDriveMotorFF);
 
     turningPIDController.reset();
     turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     turningPIDController.setPID(
-      10,
-      0,
-      .1);
+      swerveTurningP,
+      swerveTurningI,
+      swerveTurningD);
   }
 
 

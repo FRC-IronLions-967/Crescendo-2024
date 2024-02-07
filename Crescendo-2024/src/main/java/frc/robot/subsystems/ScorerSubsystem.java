@@ -54,22 +54,23 @@ public class ScorerSubsystem extends SubsystemBase {
     pivotMotor = new CANSparkMax(12, MotorType.kBrushless);
     feederMotor = new CANSparkMax(13, MotorType.kBrushless);
     scorerMotorPID = scorerMotor.getPIDController();
-    scorerMotorPID.setP(1);
-    scorerMotorPID.setI(0);
-    scorerMotorPID.setD(0);
-    scorerMotorPID.setFF(0);
+    scorerMotorPID.setP(Values.getInstance().getDoubleValue("scorerMotorP"));
+    scorerMotorPID.setI(Values.getInstance().getDoubleValue("scorerMotorI"));
+    scorerMotorPID.setD(Values.getInstance().getDoubleValue("scorerMotorD"));
+    scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(360.0);
     pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
-    pivotMotorPID.setP(1);
-    pivotMotorPID.setI(0);
-    pivotMotorPID.setD(0);
-    pivotMotorPID.setFF(0);
+    pivotMotorPID.setP(Values.getInstance().getDoubleValue("scorerPivotMotorP"));
+    pivotMotorPID.setI(Values.getInstance().getDoubleValue("scorerPivotMotorI"));
+    pivotMotorPID.setD(Values.getInstance().getDoubleValue("scorerPivotMotorD"));
+    pivotMotorPID.setFF(Values.getInstance().getDoubleValue("scorerPivotMotorFF"));
+    pivotMotorPID.setPositionPIDWrappingEnabled(false);
     feederMotorPID = feederMotor.getPIDController();
-    feederMotorPID.setP(1);
-    feederMotorPID.setI(0);
-    feederMotorPID.setD(0);
-    feederMotorPID.setFF(0);
+    feederMotorPID.setP(Values.getInstance().getDoubleValue("feederMotorP"));
+    feederMotorPID.setI(Values.getInstance().getDoubleValue("feederMotorI"));
+    feederMotorPID.setD(Values.getInstance().getDoubleValue("feederMotorD"));
+    feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
     feederLimit1 = new DigitalInput(3);
     feederLimit2 = new DigitalInput(4);
   }
@@ -85,7 +86,7 @@ public class ScorerSubsystem extends SubsystemBase {
     if(speed < -kMaxNEOSpeed) speed = -kMaxNEOSpeed;
     if(speed > kMaxNEOSpeed) speed = kMaxNEOSpeed;
 
-    feederMotorPID.setReference(1, ControlType.kVelocity);
+    feederMotorPID.setReference(speed, ControlType.kVelocity);
   }
 
   public void moveShooter(double position) {
@@ -141,7 +142,7 @@ public class ScorerSubsystem extends SubsystemBase {
     //     startScorer = false;
     // }
     if (feederLimit1.get() || feederLimit2.get()) hasNote = true;
-    SmartDashboard.putNumber("Shooter Angle", pivotMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
 
