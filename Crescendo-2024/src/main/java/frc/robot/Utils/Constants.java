@@ -21,9 +21,9 @@ public final class Constants {
     //needs tunings
     public static final double kSecondsPerMinute = 60;
   
-    private static final double kModuleMaxAngularVelocity = kMaxAngularSpeed;
-    private static final double kModuleMaxAngularAcceleration =
-        2 * Math.PI; // radians per second squared
+    // private static final double kModuleMaxAngularVelocity = kMaxAngularSpeed;
+    // private static final double kModuleMaxAngularAcceleration =
+    //     2 * Math.PI; // radians per second squared
     public static final Translation2d m_frontLeftLocation = new Translation2d(0.308, 0.308);
     public static final Translation2d m_frontRightLocation = new Translation2d(0.308, -0.308);
     public static final Translation2d m_backLeftLocation = new Translation2d(-0.308, 0.308);

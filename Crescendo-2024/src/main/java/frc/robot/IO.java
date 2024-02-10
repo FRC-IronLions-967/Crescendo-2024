@@ -23,25 +23,43 @@ public static IO getInstance() {
 public void teleopInit(){
 //put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
+Command intakeNote = new SequentialCommandGroup(
+    new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
+    new RunIntakeInCommand(),
+    new RetractIntakeCommand(),
+    new TransferNoteCommand(),
+    new MoveToSpeakerPositionCommand()
+);
 // Command intakeNote = new SequentialCommandGroup(
-//     new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
+//     new ExtendIntakeCommand(),
 //     new RunIntakeInCommand(),
-//     new RetractIntakeCommand(),
-//     new TransferNoteCommand()
+//     new RetractIntakeCommand()
 // );
+Command handOff = new ParallelCommandGroup(new TestRunFeeder(2000), new TestRunIntake(-3000));
+Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
 // Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
 // manipulatorController.whenButtonPressed("B", intakeNote);
 // manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
-// manipulatorController.whenButtonPressed("Y", new RunScorerCommand());
+manipulatorController.whenButtonPressed("B", new RunScorerCommand());
 // manipulatorController.whenButtonPressed("X", scoreIntoAmp);
-// manipulatorController.whenButtonPressed("A", new TestRunScorer(5600));
+// manipulatorController.whenButtonPressed("X", new TestRunScorer(5600));
+// manipulatorController.whenButtonReleased("X", new TestRunScorer(0));
 // manipulatorController.whenButtonReleased("A", new TestRunScorer(0));
-// manipulatorController.whenButtonPressed("B", new TestRunFeeder(2000));
-// manipulatorController.whenButtonReleased("B", new TestRunFeeder(0));
-// manipulatorController.whenButtonPressed("X", new TestMoveScorer(75));
-// manipulatorController.whenButtonReleased("X", new TestMoveScorer(52));
-manipulatorController.whenButtonPressed("Y", new RunIntakeInCommand());
-manipulatorController.whenButtonPressed("A", new TestRunIntake(0));
+// manipulatorController.whenButtonPressed("B", handOff);
+// manipulatorController.whenButtonReleased("B", handOver);
+// manipulatorController.whenButtonPressed("Y", new TestRunFeeder(3000));
+// manipulatorController.whenButtonReleased("Y", new TestRunFeeder(0));
+// manipulatorController.whenButtonPressed("LBUMP", new TestRunScorer(1100));//1100
+// manipulatorController.whenButtonReleased("LBUMP", new TestRunScorer(0));
+
+manipulatorController.whenButtonPressed("LBUMP", new TestMoveScorer(0.56));//0.56
+manipulatorController.whenButtonPressed("RBUMP", new TestMoveScorer(0.82));
+// manipulatorController.whenButtonPressed("Y", new RunIntakeInCommand());
+// manipulatorController.whenButtonPressed("A", new TestRunIntake(0));
+// manipulatorController.whenButtonPressed("B", new TestMoveIntake(0.66));
+// manipulatorController.whenButtonReleased("B", new TestMoveIntake(0.16));
+manipulatorController.whenButtonPressed("A", intakeNote);
+manipulatorController.whenButtonReleased("A", new RetractIntakeCommand());
 }
 public XBoxController getDriverController(){
     return driverController;

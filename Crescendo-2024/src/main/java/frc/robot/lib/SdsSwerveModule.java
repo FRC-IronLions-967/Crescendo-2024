@@ -5,20 +5,16 @@
 package frc.robot.lib;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
@@ -33,14 +29,12 @@ public class SdsSwerveModule {
   private double swerveDriveMotorFF;
 
   private CANSparkMax driveMotor;
-  private SparkMaxPIDController driveMotorController;
+  private SparkPIDController driveMotorController;
   private CANSparkMax turningMotor;
 
   private ThriftyEncoder turningEncoder;
 
   private int i;
-  private int iCanId;
-
   // Gains are for example purposes only - must be determined for your own robot!
   private final PIDController turningPIDController =
        new PIDController(
@@ -81,7 +75,6 @@ public class SdsSwerveModule {
     //REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
     //REVPhysicsSim.getInstance().addSparkMax(turningMotor, DCMotor.getVex775Pro(1));
 
-    iCanId = turningEncoderAnalogPort;
     turningEncoder = new ThriftyEncoder(turningEncoderAnalogPort);
 
     /*

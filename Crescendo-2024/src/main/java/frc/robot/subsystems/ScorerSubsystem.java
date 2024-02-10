@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IO;
 import frc.robot.Utils.Values;
 
 public class ScorerSubsystem extends SubsystemBase {
@@ -25,7 +26,6 @@ public class ScorerSubsystem extends SubsystemBase {
   private SparkPIDController pivotMotorPID;
   private SparkPIDController feederMotorPID;
   private DigitalInput feederLimit1; 
-  private DigitalInput feederLimit2;
   private boolean hasNote;
 
   private double kScorerMaxPosition;
@@ -53,26 +53,31 @@ public class ScorerSubsystem extends SubsystemBase {
     scorerMotor = new CANSparkMax(11, MotorType.kBrushless);
     pivotMotor = new CANSparkMax(12, MotorType.kBrushless);
     feederMotor = new CANSparkMax(13, MotorType.kBrushless);
+    // pivotMotor.setInverted(true);
     scorerMotorPID = scorerMotor.getPIDController();
     scorerMotorPID.setP(Values.getInstance().getDoubleValue("scorerMotorP"));
     scorerMotorPID.setI(Values.getInstance().getDoubleValue("scorerMotorI"));
     scorerMotorPID.setD(Values.getInstance().getDoubleValue("scorerMotorD"));
     scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
+
     pivotMotorPID = pivotMotor.getPIDController();
-    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(360.0);
+    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
     pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
+    pivotMotorPID.setOutputRange(-0.7, 0.7);
     pivotMotorPID.setP(Values.getInstance().getDoubleValue("scorerPivotMotorP"));
     pivotMotorPID.setI(Values.getInstance().getDoubleValue("scorerPivotMotorI"));
     pivotMotorPID.setD(Values.getInstance().getDoubleValue("scorerPivotMotorD"));
     pivotMotorPID.setFF(Values.getInstance().getDoubleValue("scorerPivotMotorFF"));
+    pivotMotor.setClosedLoopRampRate(0.5);
     pivotMotorPID.setPositionPIDWrappingEnabled(false);
+    
     feederMotorPID = feederMotor.getPIDController();
     feederMotorPID.setP(Values.getInstance().getDoubleValue("feederMotorP"));
     feederMotorPID.setI(Values.getInstance().getDoubleValue("feederMotorI"));
     feederMotorPID.setD(Values.getInstance().getDoubleValue("feederMotorD"));
     feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
-    feederLimit1 = new DigitalInput(3);
-    feederLimit2 = new DigitalInput(4);
+    feederLimit1 = new DigitalInput(Values.getInstance().getIntValue("feederLimit1"));
+    feederMotor.setClosedLoopRampRate(0.25);
   }
 
   public void runScorer(double speed) {
@@ -111,40 +116,41 @@ public class ScorerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // switch (state) {
-    //   case IDLE:
-    //     feederMotorPID.setReference(0, ControlType.kVelocity);
-    //     scorerMotorPID.setReference(0, ControlType.kVelocity);
-    //     if (startScorer) {
-    //       state = ScorerStates.RAMP_UP;
-    //     }
-    //     break;
-    //   case RAMP_UP:
-    //   scorerMotorPID.setReference(speed, ControlType.kVelocity);
-    //     if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
-    //       state = ScorerStates.SHOOT;
-    //     break;
-    //   case SHOOT:
-    //   feederMotorPID.setReference(kMaxNEOSpeed / 4, ControlType.kVelocity);
-    //     if (!feederLimit1.get() && !feederLimit2.get()) {
-    //       state = ScorerStates.DELAY;
-    //       timer.start();
-    //     }
-    //     break;
-    //   case DELAY:
-    //     if (timer.hasElapsed(0.5)) {
-    //       state = ScorerStates.IDLE;
-    //       startScorer = false;
-    //     }
-    //     break;
-    //   default:
-    //     state = ScorerStates.IDLE;
-    //     startScorer = false;
-    // }
-    if (feederLimit1.get() || feederLimit2.get()) hasNote = true;
+    switch (state) {
+      case IDLE:
+        feederMotorPID.setReference(0, ControlType.kVelocity);
+        scorerMotorPID.setReference(0, ControlType.kVelocity);
+        if (startScorer) {
+          state = ScorerStates.RAMP_UP;
+        }
+        break;
+      case RAMP_UP:
+      scorerMotorPID.setReference(speed, ControlType.kVelocity);
+        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
+          state = ScorerStates.SHOOT;
+        break;
+      case SHOOT:
+      feederMotorPID.setReference(3000, ControlType.kVelocity);
+        if (!feederLimit1.get()) {
+          state = ScorerStates.DELAY;
+          timer.start();
+        }
+        break;
+      case DELAY:
+        if (timer.hasElapsed(0.5)) {
+          state = ScorerStates.IDLE;
+          startScorer = false;
+        }
+        break;
+      default:
+        state = ScorerStates.IDLE;
+        startScorer = false;
+    }
+    hasNote = feederLimit1.get();
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
-
+    SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
+    SmartDashboard.putBoolean("Feeder Limit", hasNote);
   }
 }

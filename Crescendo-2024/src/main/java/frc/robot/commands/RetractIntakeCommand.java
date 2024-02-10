@@ -11,11 +11,11 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class RetractIntakeCommand extends Command {
   /** Creates a new ToggleIntakePositionCommand. */
   private double tolerance;
-  private double kIntakeMinPosition;
+  private double kIntakeMaxPosition;
   public RetractIntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
-    kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
+    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
     tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
@@ -26,7 +26,7 @@ public class RetractIntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMinPosition);
+    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMaxPosition);
   }
   
   // Called once the command ends or is interrupted.
@@ -36,6 +36,6 @@ public class RetractIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return kIntakeMinPosition - tolerance <= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() && kIntakeMinPosition + tolerance >= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition();
+    return kIntakeMaxPosition - tolerance <= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() && kIntakeMaxPosition + tolerance >= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition();
   }
 }

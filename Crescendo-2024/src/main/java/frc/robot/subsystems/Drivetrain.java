@@ -143,7 +143,7 @@ public class Drivetrain extends SubsystemBase {
       // System.out.println(m_gyro.getFusedHeading());
 
       // Update the pose
-      var m_pose = m_odometry.update(gyroAngle,
+      m_odometry.update(gyroAngle,
       new SwerveModulePosition[] {
       m_frontLeft.getPosition(), m_frontRight.getPosition(),
       m_backLeft.getPosition(), m_backRight.getPosition()

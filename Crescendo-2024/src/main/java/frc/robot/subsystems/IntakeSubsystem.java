@@ -28,10 +28,6 @@ public class IntakeSubsystem extends SubsystemBase {
   private double kIntakeMaxPosition;
   private double kIntakeMinPosition;
   private double kMaxNEOSpeed;
-  private double intakeMotorP;
-  private double intakeMotorI;
-  private double intakeMotorD;
-  private double intakeMotorFF;
 
   public boolean intakePostionOut;
   /** Creates a new IntakeSubsystem. */
@@ -52,12 +48,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
     pivotMotor = new CANSparkMax(10, MotorType.kBrushless);
     pivotMotorPID = pivotMotor.getPIDController();
-    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(360.0);
     pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
+    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(1);
+    pivotMotorPID.setOutputRange(-0.7, 0.7);
     pivotMotorPID.setP(Values.getInstance().getDoubleValue("intakePivotMotorP"));
     pivotMotorPID.setI(Values.getInstance().getDoubleValue("intakePivotMotorI"));
     pivotMotorPID.setD(Values.getInstance().getDoubleValue("intakePivotMotorD"));
     pivotMotorPID.setFF(Values.getInstance().getDoubleValue("intakePivotMotorFF"));
+    pivotMotor.setClosedLoopRampRate(0.5);
+    pivotMotorPID.setPositionPIDWrappingEnabled(false);
 
     isNoteIn = new DigitalInput(2);
     hasNote = false;

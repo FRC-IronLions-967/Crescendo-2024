@@ -5,17 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class TransferNoteCommand extends Command {
-  /** Creates a new TransferNote. */
-  private double kMaxNEOSpeed;
-  public TransferNoteCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
+public class TestMoveIntake extends Command {
+  /** Creates a new TestMoveIntake. */
+  private double position;
+  public TestMoveIntake(double position) {
+    this.position = position;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
-    addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -25,20 +23,16 @@ public class TransferNoteCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-3000);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(3000);
+    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(position);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
+    return true;
   }
 }
