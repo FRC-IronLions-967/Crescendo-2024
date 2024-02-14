@@ -1,8 +1,10 @@
 package frc.robot.lib.controls;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DoNothingCommand;
@@ -23,6 +25,8 @@ public class XBoxController extends Joystick {
 
     private HashMap<String, Trigger> buttonMap;
     private HashMap<String, Trigger> povMap;
+
+    private ControlScheme controlScheme;
 
     public XBoxController(int id) {
         super(id);
@@ -61,6 +65,19 @@ public class XBoxController extends Joystick {
             button.onTrue(new DoNothingCommand());
             button.onFalse(new DoNothingCommand());
         }
+    }
+
+    public XBoxController(int id, ControlScheme controlScheme) {
+        super(id);
+        this.controlScheme = controlScheme;
+    }
+
+    public void setControlScheme(ControlScheme controlScheme) {
+        this.controlScheme = controlScheme;
+        for(Entry<String, Trigger> e: buttonMap.entrySet()) {
+            if(controlScheme.hasMapping(e.getKey())) {
+            }
+        } 
     }
 
     //assigns commands to buttons
