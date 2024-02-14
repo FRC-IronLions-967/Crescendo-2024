@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DoNothingCommand;
@@ -12,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class XBoxController extends Joystick {
+public class XBoxController extends Joystick implements ControlSchemeVisitor {
     public static final int LEFT_X_AXIS = 0;
     public static final int LEFT_Y_AXIS = 1;
     public static final int LEFT_TRIGGER = 2;
@@ -69,15 +68,32 @@ public class XBoxController extends Joystick {
 
     public XBoxController(int id, ControlScheme controlScheme) {
         super(id);
-        this.controlScheme = controlScheme;
+        
+        setControlScheme(controlScheme);
     }
 
     public void setControlScheme(ControlScheme controlScheme) {
         this.controlScheme = controlScheme;
-        for(Entry<String, Trigger> e: buttonMap.entrySet()) {
-            if(controlScheme.hasMapping(e.getKey())) {
-            }
-        } 
+
+        // clear out the current command mapping
+        for(Entry<String, Trigger> e : buttonMap.entrySet()) {
+            e.getValue().onTrue(new DoNothingCommand());
+            e.getValue().onFalse(new DoNothingCommand());
+        }
+
+        for(Entry<String, Trigger> e : povMap.entrySet()) {
+            e.getValue().onTrue(new DoNothingCommand());
+            e.getValue().onFalse(new DoNothingCommand());
+        }
+
+        // assign all of the commands in the control scheme to buttons
+        for(ControlSchemeCommand c : controlScheme.getControlSchemeCommands()) {
+            c.accept(this);
+        }
+    }
+
+    public ControlScheme getControlScheme() {
+        return controlScheme;
     }
 
     //assigns commands to buttons
@@ -146,6 +162,28 @@ public class XBoxController extends Joystick {
     public boolean isTriggerPressed(int trigger) {
         if(trigger != 2 && trigger != 3) return false;
         return (this.getRawAxis(trigger) > triggerTolerance) ? true : false;
+    }
+
+    /**
+     * Overridden method from ControlSchemeVisitor interface, provides a clean way to set commands to run on pressed.
+     */
+    public void visit(ControlSchemeOnPressedCommand command) {
+        if(buttonMap.containsKey(command.getButton())) {
+            buttonMap.get(command.getButton()).onTrue(command.getCommand());
+        } else if(povMap.containsKey(command.getButton())) {
+            povMap.get(command.getButton()).onTrue(command.getCommand());
+        }
+    }
+
+    /**
+     * Overridden method from ControlSchemeVisitor interface, provides a clean way to set commands to run on released.
+     */
+    public void visit(ControlSchemeOnReleasedCommand command) {
+        if(buttonMap.containsKey(command.getButton())) {
+            buttonMap.get(command.getButton()).onFalse(command.getCommand());
+        } else if(povMap.containsKey(command.getButton())) {
+            povMap.get(command.getButton()).onFalse(command.getCommand());
+        }
     }
 
 
