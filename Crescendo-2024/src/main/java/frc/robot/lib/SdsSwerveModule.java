@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
@@ -31,6 +32,8 @@ public class SdsSwerveModule {
   private CANSparkMax driveMotor;
   private SparkPIDController driveMotorController;
   private CANSparkMax turningMotor;
+
+  private int driveID;
 
   private ThriftyEncoder turningEncoder;
 
@@ -60,6 +63,7 @@ public class SdsSwerveModule {
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
     turningMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setIdleMode(IdleMode.kCoast);
+    driveID = driveMotorCANId;
 
     turningPIDController.setTolerance(0.02,0.0);
 
@@ -138,6 +142,8 @@ public class SdsSwerveModule {
       // System.out.println("Motor Speed     " + iCanId + ": " + driveMotor.getEncoder().getVelocity());
     }
     i = (i + 1) % 100;
+
+    SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
 
     driveMotorController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
     turningMotor.setVoltage(turnOutput);

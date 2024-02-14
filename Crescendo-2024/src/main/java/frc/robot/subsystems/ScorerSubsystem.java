@@ -59,6 +59,7 @@ public class ScorerSubsystem extends SubsystemBase {
     scorerMotorPID.setI(Values.getInstance().getDoubleValue("scorerMotorI"));
     scorerMotorPID.setD(Values.getInstance().getDoubleValue("scorerMotorD"));
     scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
+    scorerMotorPID.setIMaxAccum(10000, 0);
 
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
