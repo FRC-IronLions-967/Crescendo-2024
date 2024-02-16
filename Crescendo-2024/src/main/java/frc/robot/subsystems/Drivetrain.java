@@ -16,9 +16,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Utils;
 import frc.robot.lib.SdsSwerveModule;
 import frc.robot.lib.controls.XBoxController;
 
@@ -33,10 +35,10 @@ public class Drivetrain extends SubsystemBase {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(10);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(10);
 
-  private final SdsSwerveModule m_frontLeft = new SdsSwerveModule(1, 2, 0);
-  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(7, 8, 3);
-  private final SdsSwerveModule m_backLeft = new SdsSwerveModule(3, 4, 1);
-  private final SdsSwerveModule m_backRight = new SdsSwerveModule(5, 6, 2);
+  private final SdsSwerveModule m_frontLeft = new SdsSwerveModule(5, 6, 2);
+  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4, 1);
+  private final SdsSwerveModule m_backLeft = new SdsSwerveModule(7, 8, 3);
+  private final SdsSwerveModule m_backRight = new SdsSwerveModule(1, 2, 0);
 //first two colums above are done
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -117,14 +119,14 @@ public class Drivetrain extends SubsystemBase {
       // Get the x speed. We are inverting this because Xbox controllers return
       // negative values when we push forward.
       final var xSpeed = m_xspeedLimiter.calculate(
-      -MathUtil.applyDeadband(driveController.getLeftStickY(), 0.2)
+      Utils.squarePreserveSign(-MathUtil.applyDeadband(driveController.getLeftStickY(), 0.2))
           * Constants.kMaxSpeed);
 
       // Get the y speed or sideways/strafe speed. We are inverting this because
       // we want a positive value when we pull to the left. Xbox controllers
       // return positive values when you pull to the right by default.
       final var ySpeed = m_yspeedLimiter.calculate(
-          MathUtil.applyDeadband(-driveController.getLeftStickX(), 0.2)
+          Utils.squarePreserveSign(MathUtil.applyDeadband(-driveController.getLeftStickX(), 0.2))
               * Constants.kMaxSpeed);
 
       // Get the rate of angular rotation. We are inverting this because we want a
@@ -143,7 +145,7 @@ public class Drivetrain extends SubsystemBase {
       // System.out.println(m_gyro.getFusedHeading());
 
       // Update the pose
-      var m_pose = m_odometry.update(gyroAngle,
+      m_odometry.update(gyroAngle,
       new SwerveModulePosition[] {
       m_frontLeft.getPosition(), m_frontRight.getPosition(),
       m_backLeft.getPosition(), m_backRight.getPosition()

@@ -15,9 +15,9 @@ public class SubsystemsInstance {
         scorersubsystem = new ScorerSubsystem();
         
 
-        CommandScheduler.getInstance().registerSubsystem(drivetrain);
-        CommandScheduler.getInstance().registerSubsystem(intakesubsystem);
-        CommandScheduler.getInstance().registerSubsystem(scorersubsystem);
+        //CommandScheduler.getInstance().registerSubsystem(drivetrain);
+        // CommandScheduler.getInstance().registerSubsystem(intakesubsystem);
+        // CommandScheduler.getInstance().registerSubsystem(scorersubsystem);
        
 
     }

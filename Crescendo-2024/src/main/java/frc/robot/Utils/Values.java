@@ -10,7 +10,7 @@
  public class Values {
  
      private static Values inst = null;
-     private static final String[] FILE_PATHS = {"robot.properties"};
+     private static final String[] FILE_PATHS = {"/home/lvuser/deploy/robot.properties"};
  
      private Properties[] properties;
  

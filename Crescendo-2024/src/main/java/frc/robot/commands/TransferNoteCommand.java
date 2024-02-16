@@ -25,8 +25,8 @@ public class TransferNoteCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-kMaxNEOSpeed / 4);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(kMaxNEOSpeed);
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-3000);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(3000);
   }
 
   // Called once the command ends or is interrupted.

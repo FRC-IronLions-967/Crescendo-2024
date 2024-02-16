@@ -8,17 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunIntakeInCommand extends Command {
-  private double kIntakeMaxPosition;
+public class RunAndExtendIntakeCommand extends Command {
+  /** Creates a new RunAndExtendIntake. */
+  private double kIntakeMinPosition;
   private double tolerance;
-  private double kMaxNEOSpeed;
-  /** Creates a new RunIntakeInCommand. */
-  public RunIntakeInCommand() {
+  public RunAndExtendIntakeCommand() {
+    kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
-    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
   }
 
   // Called when the command is initially scheduled.
@@ -28,9 +26,8 @@ public class RunIntakeInCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
-      SubsystemsInstance.getInstance().intakesubsystem.runIntake(3000);
-    // }
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(3000);
+    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMinPosition);
   }
 
   // Called once the command ends or is interrupted.

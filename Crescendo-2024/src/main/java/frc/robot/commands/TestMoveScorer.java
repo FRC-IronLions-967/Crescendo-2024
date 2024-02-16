@@ -5,18 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveToAmpPositionCommand extends Command {
-  /** Creates a new TogglescorerPositionCommand. */
-  private double kScorerMaxPosition;
-  private double tolerance;
-  public MoveToAmpPositionCommand() {
+public class TestMoveScorer extends Command {
+  /** Creates a new TestMoveScorer. */
+  private double position;
+  public TestMoveScorer(double position) {
+    this.position = position;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +23,7 @@ public class MoveToAmpPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.56);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(position);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +33,6 @@ public class MoveToAmpPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return kScorerMaxPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && kScorerMaxPosition + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
+    return true;
   }
 }
