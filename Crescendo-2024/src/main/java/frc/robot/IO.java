@@ -24,8 +24,7 @@ public void teleopInit(){
 //put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
 Command intakeNote = new SequentialCommandGroup(
-    new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
-    new RunIntakeInCommand(),
+    new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
     new RetractIntakeCommand(),
     new TransferNoteCommand(),
     new MoveToSpeakerPositionCommand()
