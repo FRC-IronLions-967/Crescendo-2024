@@ -52,8 +52,8 @@ manipulatorController.whenButtonPressed("B", new RunScorerCommand());
 // manipulatorController.whenButtonPressed("LBUMP", new TestRunScorer(1100));//1100
 // manipulatorController.whenButtonReleased("LBUMP", new TestRunScorer(0));
 
-manipulatorController.whenButtonPressed("LBUMP", new TestMoveScorer(0.56));//0.56
-manipulatorController.whenButtonPressed("RBUMP", new TestMoveScorer(0.82));
+manipulatorController.whenButtonPressed("RBUMP", new AdjustShooterPositionCommand(0.01));//0.56
+manipulatorController.whenButtonPressed("LBUMP", new AdjustShooterPositionCommand(-0.01));
 // manipulatorController.whenButtonPressed("Y", new RunIntakeInCommand());
 // manipulatorController.whenButtonPressed("A", new TestRunIntake(0));
 // manipulatorController.whenButtonPressed("B", new TestMoveIntake(0.66));

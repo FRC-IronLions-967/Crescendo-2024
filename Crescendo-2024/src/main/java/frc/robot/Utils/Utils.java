@@ -5,4 +5,11 @@ public class Utils {
         return ((x > d)) || (x < -d) ? x : 0.0;
     }
 
+    public static double squarePreserveSign(double x) {
+        if (x < 0) {
+            return -x*x;
+        }
+        return x*x;
+    }
+
 }

@@ -30,6 +30,7 @@ public class ScorerSubsystem extends SubsystemBase {
 
   private double kScorerMaxPosition;
   private double kScorerMinPosition;
+  private double pivotPosition;
   private double speedTolerance;
   private double kMaxNEOSpeed;
 
@@ -100,10 +101,20 @@ public class ScorerSubsystem extends SubsystemBase {
     if(position > kScorerMaxPosition) position = kScorerMaxPosition;
   
     pivotMotorPID.setReference(position, ControlType.kPosition);
+    pivotPosition = position;
   }
 
   public double getScorerPosition() {
     return pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition();
+  }
+
+  public void adjustShooter(double delta) {
+    pivotPosition += delta; 
+
+    if(pivotPosition < kScorerMinPosition) pivotPosition = kScorerMinPosition;
+    if(pivotPosition > kScorerMaxPosition) pivotPosition = kScorerMaxPosition;
+  
+    pivotMotorPID.setReference(pivotPosition, ControlType.kPosition);
   }
 
   public boolean isNoteIn() {
