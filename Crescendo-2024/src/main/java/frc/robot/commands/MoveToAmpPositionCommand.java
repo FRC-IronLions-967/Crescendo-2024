@@ -26,7 +26,7 @@ public class MoveToAmpPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(kScorerMaxPosition);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.56);
   }
 
   // Called once the command ends or is interrupted.

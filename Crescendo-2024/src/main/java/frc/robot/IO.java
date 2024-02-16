@@ -53,6 +53,8 @@ manipulatorController.whenButtonPressed("B", new RunScorerCommand());
 
 manipulatorController.whenButtonPressed("RBUMP", new AdjustShooterPositionCommand(0.01));//0.56
 manipulatorController.whenButtonPressed("LBUMP", new AdjustShooterPositionCommand(-0.01));
+manipulatorController.whenButtonPressed("X", new MoveToAmpPositionCommand());
+manipulatorController.whenButtonPressed("Y", new MoveToSpeakerPositionCommand());
 // manipulatorController.whenButtonPressed("Y", new RunIntakeInCommand());
 // manipulatorController.whenButtonPressed("A", new TestRunIntake(0));
 // manipulatorController.whenButtonPressed("B", new TestMoveIntake(0.66));
