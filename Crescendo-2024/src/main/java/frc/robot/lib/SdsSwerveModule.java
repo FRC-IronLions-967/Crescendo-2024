@@ -146,6 +146,10 @@ public class SdsSwerveModule {
     SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
 
     driveMotorController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
-    turningMotor.setVoltage(turnOutput);
+    if (turnOutput > 0.5 ) {
+      turningMotor.setVoltage(turnOutput);
+    } else {
+      turningMotor.setVoltage(0);
+    }
   }
 }

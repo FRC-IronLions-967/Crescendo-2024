@@ -36,11 +36,11 @@ Command intakeNote = new SequentialCommandGroup(
 // );
 Command handOff = new ParallelCommandGroup(new TestRunFeeder(2000), new TestRunIntake(-3000));
 Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
-// Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
+Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
 // manipulatorController.whenButtonPressed("B", intakeNote);
 // manipulatorController.whenButtonReleased("B", new RetractIntakeCommand());
 manipulatorController.whenButtonPressed("B", new RunScorerCommand());
-// manipulatorController.whenButtonPressed("X", scoreIntoAmp);
+//manipulatorController.whenPOVButtonPressed("N", new TestRunScorer(1100));
 // manipulatorController.whenButtonPressed("X", new TestRunScorer(5600));
 // manipulatorController.whenButtonReleased("X", new TestRunScorer(0));
 // manipulatorController.whenButtonReleased("A", new TestRunScorer(0));
