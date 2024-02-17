@@ -8,17 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunScorerCommand extends Command {
-  /** Creates a new RunScorerCommand. */
+public class TransferNoteCommand extends Command {
+  /** Creates a new TransferNote. */
   private double kMaxNEOSpeed;
-  private double tolerance;
-  private double kScorerMaxPosition;
-  public RunScorerCommand() {
+  public TransferNoteCommand() {
     kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
-
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
+    addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,21 +25,20 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(0.75 <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition()) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);
-    }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);   
-    }
-
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-3000);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(3000);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
   }
 }

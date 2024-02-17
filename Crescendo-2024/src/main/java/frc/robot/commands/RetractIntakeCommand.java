@@ -8,17 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunScorerCommand extends Command {
-  /** Creates a new RunScorerCommand. */
-  private double kMaxNEOSpeed;
+public class RetractIntakeCommand extends Command {
+  /** Creates a new ToggleIntakePositionCommand. */
   private double tolerance;
-  private double kScorerMaxPosition;
-  public RunScorerCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
-
+  private double kIntakeMaxPosition;
+  public RetractIntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
+    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
   // Called when the command is initially scheduled.
@@ -28,14 +26,9 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(0.75 <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition()) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);
-    }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);   
-    }
-
+      SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMaxPosition);
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
@@ -43,6 +36,6 @@ public class RunScorerCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return kIntakeMaxPosition - tolerance <= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() && kIntakeMaxPosition + tolerance >= SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition();
   }
 }

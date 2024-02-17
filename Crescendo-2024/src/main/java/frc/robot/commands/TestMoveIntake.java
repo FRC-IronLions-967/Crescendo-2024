@@ -5,20 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunScorerCommand extends Command {
-  /** Creates a new RunScorerCommand. */
-  private double kMaxNEOSpeed;
-  private double tolerance;
-  private double kScorerMaxPosition;
-  public RunScorerCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
-
+public class TestMoveIntake extends Command {
+  /** Creates a new TestMoveIntake. */
+  private double position;
+  public TestMoveIntake(double position) {
+    this.position = position;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,12 +23,7 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(0.75 <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition()) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);
-    }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);   
-    }
-
+    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(position);
   }
 
   // Called once the command ends or is interrupted.

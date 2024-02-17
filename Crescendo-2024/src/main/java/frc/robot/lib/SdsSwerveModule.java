@@ -5,33 +5,39 @@
 package frc.robot.lib;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 
 public class SdsSwerveModule {
 
+  private double swerveTurningP;
+  private double swerveTurningI;
+  private double swerveTurningD;
+  private double swerveDriveMotorP;
+  private double swerveDriveMotorI;
+  private double swerveDriveMotorD;
+  private double swerveDriveMotorFF;
+
   private CANSparkMax driveMotor;
-  private SparkMaxPIDController driveMotorController;
+  private SparkPIDController driveMotorController;
   private CANSparkMax turningMotor;
+
+  private int driveID;
 
   private ThriftyEncoder turningEncoder;
 
   private int i;
-  private int iCanId;
-
   // Gains are for example purposes only - must be determined for your own robot!
   private final PIDController turningPIDController =
        new PIDController(
@@ -57,14 +63,22 @@ public class SdsSwerveModule {
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
     turningMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setIdleMode(IdleMode.kCoast);
+    driveID = driveMotorCANId;
 
     turningPIDController.setTolerance(0.02,0.0);
+
+    swerveTurningP = Values.getInstance().getDoubleValue("swerveTurningP");
+    swerveTurningI = Values.getInstance().getDoubleValue("swerveTurningI");
+    swerveTurningD = Values.getInstance().getDoubleValue("swerveTurningD");
+    swerveDriveMotorP = Values.getInstance().getDoubleValue("swerveDriveMotorP");
+    swerveDriveMotorI = Values.getInstance().getDoubleValue("swerveDriveMotorI");
+    swerveDriveMotorD = Values.getInstance().getDoubleValue("swerveDriveMotorD");
+    swerveDriveMotorFF = Values.getInstance().getDoubleValue("swerveDriveMotorFF");
     
 
     //REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
     //REVPhysicsSim.getInstance().addSparkMax(turningMotor, DCMotor.getVex775Pro(1));
 
-    iCanId = turningEncoderAnalogPort;
     turningEncoder = new ThriftyEncoder(turningEncoderAnalogPort);
 
     /*
@@ -74,17 +88,17 @@ public class SdsSwerveModule {
     //driveMotor.getEncoder().setVelocityConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     //driveMotor.getEncoder().setPositionConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     driveMotorController = driveMotor.getPIDController();
-    driveMotorController.setP(0.08);
-    driveMotorController.setI(0.0);
-    driveMotorController.setD(0.025);
-    driveMotorController.setFF(0.35);
+    driveMotorController.setP(swerveDriveMotorP);
+    driveMotorController.setI(swerveDriveMotorI);
+    driveMotorController.setD(swerveDriveMotorD);
+    driveMotorController.setFF(swerveDriveMotorFF);
 
     turningPIDController.reset();
     turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     turningPIDController.setPID(
-      10,
-      0,
-      .1);
+      swerveTurningP,
+      swerveTurningI,
+      swerveTurningD);
   }
 
 
@@ -129,7 +143,13 @@ public class SdsSwerveModule {
     }
     i = (i + 1) % 100;
 
+    SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
+
     driveMotorController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
-    turningMotor.setVoltage(turnOutput);
+    if (turnOutput > 0.5 ) {
+      turningMotor.setVoltage(turnOutput);
+    } else {
+      turningMotor.setVoltage(0);
+    }
   }
 }

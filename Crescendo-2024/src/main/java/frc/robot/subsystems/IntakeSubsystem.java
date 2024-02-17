@@ -11,9 +11,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Utils.Constants;
+import frc.robot.Utils.Values;
 
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -24,40 +25,53 @@ public class IntakeSubsystem extends SubsystemBase {
   private SparkPIDController pivotMotorPID;
   private DigitalInput isNoteIn;
   private boolean hasNote;  
+  private double kIntakeMaxPosition;
+  private double kIntakeMinPosition;
+  private double kMaxNEOSpeed;
 
   public boolean intakePostionOut;
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
+    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
+    kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
+    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
+
+
     intakeMotor = new CANSparkMax(9, MotorType.kBrushless);
     intakeMotorPID = intakeMotor.getPIDController();
-    intakeMotorPID.setP(1.0);
-    intakeMotorPID.setI(0.0);
-    intakeMotorPID.setD(0.0);
-    intakeMotorPID.setFF(0.0);
+    intakeMotorPID.setP(Values.getInstance().getDoubleValue("intakeMotorP"));
+    intakeMotorPID.setI(Values.getInstance().getDoubleValue("intakeMotorI"));
+    intakeMotorPID.setD(Values.getInstance().getDoubleValue("intakeMotorD"));
+    intakeMotorPID.setFF(Values.getInstance().getDoubleValue("intakeMotorFF"));
+    intakeMotor.setClosedLoopRampRate(0.75);
+    intakeMotor.setOpenLoopRampRate(0.75);
 
     pivotMotor = new CANSparkMax(10, MotorType.kBrushless);
     pivotMotorPID = pivotMotor.getPIDController();
-    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(360.0);
     pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
-    pivotMotorPID.setP(1.0);
-    pivotMotorPID.setI(0.0);
-    pivotMotorPID.setD(0.0);
-    pivotMotorPID.setFF(0.0);
+    pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(1);
+    pivotMotorPID.setOutputRange(-0.7, 0.7);
+    pivotMotorPID.setP(Values.getInstance().getDoubleValue("intakePivotMotorP"));
+    pivotMotorPID.setI(Values.getInstance().getDoubleValue("intakePivotMotorI"));
+    pivotMotorPID.setD(Values.getInstance().getDoubleValue("intakePivotMotorD"));
+    pivotMotorPID.setFF(Values.getInstance().getDoubleValue("intakePivotMotorFF"));
+    pivotMotor.setClosedLoopRampRate(0.5);
+    pivotMotorPID.setPositionPIDWrappingEnabled(false);
 
     isNoteIn = new DigitalInput(2);
     hasNote = false;
   }
   
   public void runIntake(double speed) {
-    if(speed < -Constants.kMaxNEOSpeed) speed = -Constants.kMaxNEOSpeed;
-    if(speed > Constants.kMaxNEOSpeed) speed = Constants.kMaxNEOSpeed;
+    if(speed < -kMaxNEOSpeed) speed = -kMaxNEOSpeed;
+    if(speed > kMaxNEOSpeed) speed = kMaxNEOSpeed;
 
     intakeMotorPID.setReference(speed, ControlType.kVelocity);
   }
 
   public void moveIntake(double position) {
-    if(position < Constants.kIntakeMinPosition) position = Constants.kIntakeMinPosition;
-    if(position > Constants.kIntakeMaxPosition) position = Constants.kIntakeMaxPosition;
+    if(position < kIntakeMinPosition) position = kIntakeMinPosition;
+    if(position > kIntakeMaxPosition) position = kIntakeMaxPosition;
   
     pivotMotorPID.setReference(position, ControlType.kPosition);
   }
@@ -70,9 +84,16 @@ public class IntakeSubsystem extends SubsystemBase {
     return hasNote;
   }
 
+  public void setVoltage(double voltage) {
+    intakeMotor.set(voltage);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     hasNote = isNoteIn.get();
+    SmartDashboard.putNumber("Intake Speed", intakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake Angle", getIntakePosition());
+    SmartDashboard.putBoolean("Limit Switch", hasNote);
   }
 }
