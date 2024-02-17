@@ -138,7 +138,9 @@ public class ScorerSubsystem extends SubsystemBase {
         break;
       case RAMP_UP:
       scorerMotorPID.setReference(speed, ControlType.kVelocity);
-        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
+        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+            speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
+            IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) 
           state = ScorerStates.SHOOT;
         break;
       case SHOOT:

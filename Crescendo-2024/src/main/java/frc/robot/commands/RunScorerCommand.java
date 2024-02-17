@@ -28,10 +28,10 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(0.82 - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() <= 0.82 + tolerance) {
+    if(0.75 <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition()) {
       SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);
     }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(1100);   
+      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);   
     }
 
   }

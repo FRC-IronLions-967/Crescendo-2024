@@ -134,7 +134,7 @@ public class Drivetrain extends SubsystemBase {
       // mathematics). Xbox controllers return positive values when you pull to
       // the right by default.
       final var rot = m_rotLimiter.calculate(
-          MathUtil.applyDeadband(-driveController.getRightStickX(), 0.2)
+          Utils.squarePreserveSign(MathUtil.applyDeadband(driveController.getRightStickX(), 0.2))
               * Constants.kMaxAngularSpeed);
 
       drive(xSpeed, ySpeed, rot, fieldRelative);
@@ -150,6 +150,7 @@ public class Drivetrain extends SubsystemBase {
       m_frontLeft.getPosition(), m_frontRight.getPosition(),
       m_backLeft.getPosition(), m_backRight.getPosition()
       });
+      SmartDashboard.putBoolean("FieldRelative", fieldRelative);
     } 
      
 }
