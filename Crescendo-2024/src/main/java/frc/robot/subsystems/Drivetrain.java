@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
@@ -57,6 +61,22 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     m_gyro.reset();
     fieldRelative = true;
+     // Configure the AutoBuilder last
+     AutoBuilder.configureHolonomic(
+      this::getPose, // Robot pose supplier
+      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+          new PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
+          new PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
+          Constants.kMaxSpeed, // Max module speed, in m/s
+          Math.sqrt(0.308 * 0.308 + 0.308 * 0.308), // Drive base radius in meters. Distance from robot center to furthest module.
+          new ReplanningConfig() // Default path replanning config. See the API for the options here
+      ),
+      this::shouldFlipPath,
+      this // Reference to this subsystem to set requirements
+  );
   }
 
   /**
@@ -73,6 +93,16 @@ public class Drivetrain extends SubsystemBase {
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(-m_gyro.getFusedHeading()))
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.kMaxSpeed);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_backLeft.setDesiredState(swerveModuleStates[2]);
+    m_backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    var swerveModuleStates =
+        Constants.m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -105,8 +135,34 @@ public class Drivetrain extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
+  private ChassisSpeeds getChassisSpeeds() {
+    return Constants.m_kinematics.toChassisSpeeds(getStates());
+  }
+
+  private SwerveModuleState[] getStates() {
+    return new SwerveModuleState[] {
+      m_frontLeft.getState(),
+      m_frontRight.getState(),
+      m_backLeft.getState(),
+      m_backRight.getState()
+    };
+  }
+
+  private SwerveModulePosition[] getPosition() {
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_backLeft.getPosition(),
+      m_backRight.getPosition()
+    };
+  }
+
   public void resetOdometry(Pose2d pose) {
-    //m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getPosition(), pose);
+  }
+
+  private boolean shouldFlipPath() {
+    return true;
   }
 
   /**
