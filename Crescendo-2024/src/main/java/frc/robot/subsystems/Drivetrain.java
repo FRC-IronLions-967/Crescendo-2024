@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -61,8 +62,11 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     m_gyro.reset();
     fieldRelative = true;
-     // Configure the AutoBuilder last
-     AutoBuilder.configureHolonomic(
+  }
+
+  public void setupPathPlanner(){
+      // Configure the AutoBuilder last
+      AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -76,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
       ),
       this::shouldFlipPath,
       this // Reference to this subsystem to set requirements
-  );
+    );
   }
 
   /**
@@ -162,7 +166,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private boolean shouldFlipPath() {
-    return true;
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+        return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
 
   /**

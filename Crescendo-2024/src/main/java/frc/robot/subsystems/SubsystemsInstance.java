@@ -30,7 +30,7 @@ public class SubsystemsInstance {
         NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
         NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
 
-        
+        drivetrain.setupPathPlanner();;
 
          autoChooser = AutoBuilder.buildAutoChooser("Simple_Auto");
          SmartDashboard.putData("Auto Chooser", autoChooser);
