@@ -36,12 +36,6 @@ public final class Constants {
     new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAcceleration);
 
-    public static final Map<String, Command> autoEventMap = new HashMap<>();
-    static {
-      autoEventMap.put("autoEvent1", new DoNothingCommand());
-      autoEventMap.put("autoEvent2", new DoNothingCommand());
-      autoEventMap.put("autoEvent3", new DoNothingCommand());
-    }
 
     public static final Map<Integer, Double> kSwerveOffsets = new HashMap<>();
     static {

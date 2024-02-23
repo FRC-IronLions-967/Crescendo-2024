@@ -133,7 +133,6 @@ public class Drivetrain extends SubsystemBase {
           m_backLeft.getPosition(),
           m_backRight.getPosition()
         });
-        new Pose2d(5.0/* change these*/, 13.5, new Rotation2d());
   }
 
   public Pose2d getPose() {
@@ -202,7 +201,9 @@ public class Drivetrain extends SubsystemBase {
           Utils.squarePreserveSign(MathUtil.applyDeadband(driveController.getRightStickX(), 0.2))
               * Constants.kMaxAngularSpeed);
 
-      drive(xSpeed, ySpeed, rot, fieldRelative);
+      if (DriverStation.isTeleop()){
+        drive(xSpeed, ySpeed, rot, fieldRelative);
+      }
       
       // Update the pose
       updateOdometry();

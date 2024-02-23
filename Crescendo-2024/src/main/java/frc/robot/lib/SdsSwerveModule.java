@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
+import frc.robot.subsystems.SubsystemsInstance;
 
 public class SdsSwerveModule {
 
@@ -60,7 +61,9 @@ public class SdsSwerveModule {
       int turningMotorCANId,
       int turningEncoderAnalogPort) {
     driveMotor = new CANSparkMax(driveMotorCANId, MotorType.kBrushless);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(driveMotorCANId, driveMotor);
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(turningMotorCANId, turningMotor);
     turningMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setIdleMode(IdleMode.kCoast);
     driveID = driveMotorCANId;
@@ -85,7 +88,7 @@ public class SdsSwerveModule {
      * native units of rpm to m/s
      */
     driveMotor.getEncoder().setVelocityConversionFactor(Constants.kMaxSpeed/5700.0);
-    driveMotor.getEncoder().setPositionConversionFactor((1.0/6.75) * Constants.kWheelRadius * 2.0 * Math.PI);
+    driveMotor.getEncoder().setPositionConversionFactor((1.0/Constants.kGearRatio) * Constants.kWheelRadius * 2.0 * Math.PI);
     //driveMotor.getEncoder().setVelocityConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     //driveMotor.getEncoder().setPositionConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
     driveMotorController = driveMotor.getPIDController();

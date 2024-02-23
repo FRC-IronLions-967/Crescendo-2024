@@ -13,6 +13,7 @@ public class SubsystemsInstance {
     public Drivetrain drivetrain;
     public IntakeSubsystem intakesubsystem;
     public ScorerSubsystem scorersubsystem;
+    public CANLogger canLogger;
    
     private static SubsystemsInstance inst;
 
@@ -20,6 +21,7 @@ public class SubsystemsInstance {
         drivetrain = new Drivetrain();
         intakesubsystem = new IntakeSubsystem();
         scorersubsystem = new ScorerSubsystem();
+        canLogger = new CANLogger();
 
         drivetrain.setupPathPlanner();
         

@@ -53,8 +53,11 @@ public class ScorerSubsystem extends SubsystemBase {
 
 
     scorerMotor = new CANSparkMax(11, MotorType.kBrushless);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(11, scorerMotor);
     pivotMotor = new CANSparkMax(12, MotorType.kBrushless);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(12, pivotMotor);
     feederMotor = new CANSparkMax(13, MotorType.kBrushless);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(13, feederMotor);
     // pivotMotor.setInverted(true);
     scorerMotorPID = scorerMotor.getPIDController();
     scorerMotorPID.setP(Values.getInstance().getDoubleValue("scorerMotorP"));
