@@ -59,6 +59,7 @@ public class SdsSwerveModule {
       int driveMotorCANId,
       int turningMotorCANId,
       int turningEncoderAnalogPort) {
+
     driveMotor = new CANSparkMax(driveMotorCANId, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
     turningMotor.setIdleMode(IdleMode.kBrake);
@@ -84,10 +85,9 @@ public class SdsSwerveModule {
     /*
      * native units of rpm to m/s
      */
-    driveMotor.getEncoder().setVelocityConversionFactor(Constants.kMaxSpeed/5700.0);
-    driveMotor.getEncoder().setPositionConversionFactor((1.0/6.75) * Constants.kWheelRadius * 2.0 * Math.PI);
-    //driveMotor.getEncoder().setVelocityConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
-    //driveMotor.getEncoder().setPositionConversionFactor((2 * Math.PI * kWheelRadius) / (kSecondsPerMinute * kGearRatio));
+    driveMotor.getEncoder().setVelocityConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / (Constants.kSecondsPerMinute * Constants.kGearRatio));
+    // native units of revolutions to meters
+    driveMotor.getEncoder().setPositionConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / Constants.kGearRatio);
     driveMotorController = driveMotor.getPIDController();
     driveMotorController.setP(swerveDriveMotorP);
     driveMotorController.setI(swerveDriveMotorI);
