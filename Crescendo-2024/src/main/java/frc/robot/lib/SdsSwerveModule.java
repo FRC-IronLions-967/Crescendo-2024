@@ -120,7 +120,7 @@ public class SdsSwerveModule {
    */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        (driveMotor.getEncoder().getPosition()), new Rotation2d(turningEncoder.getAbsolutePosition()));
+        driveMotor.getEncoder().getPosition(), new Rotation2d(turningEncoder.getAbsolutePosition()));
   }
 
   /**

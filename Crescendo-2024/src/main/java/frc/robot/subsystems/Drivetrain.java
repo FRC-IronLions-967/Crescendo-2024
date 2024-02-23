@@ -204,18 +204,11 @@ public class Drivetrain extends SubsystemBase {
 
       drive(xSpeed, ySpeed, rot, fieldRelative);
       
-      
-      // Get the rotation of the robot from the gyro.
-      var gyroAngle = m_gyro.getRotation2d();
-      // System.out.println(m_gyro.getFusedHeading());
-
       // Update the pose
-      m_odometry.update(gyroAngle,
-      new SwerveModulePosition[] {
-      m_frontLeft.getPosition(), m_frontRight.getPosition(),
-      m_backLeft.getPosition(), m_backRight.getPosition()
-      });
+      updateOdometry();
+
       SmartDashboard.putBoolean("FieldRelative", fieldRelative);
+      SmartDashboard.putNumber("GyroHeading", m_gyro.getRotation2d().getDegrees());
     } 
      
 }
