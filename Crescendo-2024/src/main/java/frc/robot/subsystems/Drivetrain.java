@@ -65,6 +65,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setupPathPlanner(){
+    m_gyro.reset();
       // Configure the AutoBuilder last
       AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
@@ -73,8 +74,8 @@ public class Drivetrain extends SubsystemBase {
       this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
           new PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
-          new PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
-          Constants.kMaxSpeed, // Max module speed, in m/s
+          new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+          3.0, // Max module speed, in m/s
           Math.sqrt(0.308 * 0.308 + 0.308 * 0.308), // Drive base radius in meters. Distance from robot center to furthest module.
           new ReplanningConfig() // Default path replanning config. See the API for the options here
       ),

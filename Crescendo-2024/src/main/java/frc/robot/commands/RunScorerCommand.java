@@ -43,6 +43,6 @@ public class RunScorerCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return !SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
   }
 }

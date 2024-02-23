@@ -16,24 +16,12 @@ public class SubsystemsInstance {
    
     private static SubsystemsInstance inst;
 
-    private final SendableChooser<Command> autoChooser;
-
     private SubsystemsInstance() {
         drivetrain = new Drivetrain();
         intakesubsystem = new IntakeSubsystem();
         scorersubsystem = new ScorerSubsystem();
 
-        NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
-        NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
-        NamedCommands.registerCommand("RunAndExtendIntakeCommand", new RunAndExtendIntakeCommand());
-        NamedCommands.registerCommand("RunIntakeInCommand", new RunIntakeInCommand());
-        NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
-        NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
-
-        drivetrain.setupPathPlanner();;
-
-         autoChooser = AutoBuilder.buildAutoChooser("Simple_Auto");
-         SmartDashboard.putData("Auto Chooser", autoChooser);
+        drivetrain.setupPathPlanner();
         
 
         //CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -41,10 +29,6 @@ public class SubsystemsInstance {
         // CommandScheduler.getInstance().registerSubsystem(scorersubsystem);
        
 
-    }
-
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
     }
 
     public static SubsystemsInstance getInstance () {

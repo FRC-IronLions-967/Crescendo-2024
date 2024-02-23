@@ -4,14 +4,22 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SubsystemsInstance;
+import frc.robot.commands.*;
 
 public class Robot extends TimedRobot {
   private SubsystemsInstance subsystemsInst;
   private Command m_autonomousCommand;
+  private SendableChooser<Command> autoChooser;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -20,6 +28,15 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     subsystemsInst = SubsystemsInstance.getInstance();
+    NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
+    NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
+    NamedCommands.registerCommand("RunAndExtendIntakeCommand", new RunAndExtendIntakeCommand());
+    NamedCommands.registerCommand("RunIntakeInCommand", new RunIntakeInCommand());
+    NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
+    NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
+
+    autoChooser = AutoBuilder.buildAutoChooser("Simple_Auto");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -46,7 +63,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = subsystemsInst.getAutonomousCommand();
+    m_autonomousCommand = autoChooser.getSelected();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
