@@ -38,7 +38,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     intakeMotor = new CANSparkMax(9, MotorType.kBrushless);
-    SubsystemsInstance.getInstance().canLogger.registerSpark(9, intakeMotor);
     intakeMotorPID = intakeMotor.getPIDController();
     intakeMotorPID.setP(Values.getInstance().getDoubleValue("intakeMotorP"));
     intakeMotorPID.setI(Values.getInstance().getDoubleValue("intakeMotorI"));
@@ -48,7 +47,6 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.setOpenLoopRampRate(0.75);
 
     pivotMotor = new CANSparkMax(10, MotorType.kBrushless);
-    SubsystemsInstance.getInstance().canLogger.registerSpark(10, pivotMotor);
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotorPID.setFeedbackDevice(pivotMotor.getAbsoluteEncoder(Type.kDutyCycle));
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(1);
@@ -63,6 +61,8 @@ public class IntakeSubsystem extends SubsystemBase {
     isNoteIn = new DigitalInput(2);
     hasNote = false;
   }
+
+
   
   public void runIntake(double speed) {
     if(speed < -kMaxNEOSpeed) speed = -kMaxNEOSpeed;
@@ -88,6 +88,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setVoltage(double voltage) {
     intakeMotor.set(voltage);
+  }
+
+  public void registerCanLogging() {
+    SubsystemsInstance.getInstance().canLogger.registerSpark(9, intakeMotor);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(10, pivotMotor);
   }
 
   @Override

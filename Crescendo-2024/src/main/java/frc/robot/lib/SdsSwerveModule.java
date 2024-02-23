@@ -35,6 +35,7 @@ public class SdsSwerveModule {
   private CANSparkMax turningMotor;
 
   private int driveID;
+  private int turnID;
 
   private ThriftyEncoder turningEncoder;
 
@@ -61,12 +62,13 @@ public class SdsSwerveModule {
       int turningMotorCANId,
       int turningEncoderAnalogPort) {
     driveMotor = new CANSparkMax(driveMotorCANId, MotorType.kBrushless);
-    SubsystemsInstance.getInstance().canLogger.registerSpark(driveMotorCANId, driveMotor);
+    
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
-    SubsystemsInstance.getInstance().canLogger.registerSpark(turningMotorCANId, turningMotor);
+    
     turningMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setIdleMode(IdleMode.kCoast);
     driveID = driveMotorCANId;
+    turnID = turningMotorCANId;
 
     turningPIDController.setTolerance(0.02,0.0);
 
@@ -105,6 +107,10 @@ public class SdsSwerveModule {
       swerveTurningD);
   }
 
+  public void registerCanLogging() {
+    SubsystemsInstance.getInstance().canLogger.registerSpark(driveID, driveMotor);
+    SubsystemsInstance.getInstance().canLogger.registerSpark(turnID, turningMotor);
+  }
 
   /**
    * Returns the current state of the module.

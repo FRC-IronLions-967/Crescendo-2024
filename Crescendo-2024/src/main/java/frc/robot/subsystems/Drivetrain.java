@@ -173,6 +173,13 @@ public class Drivetrain extends SubsystemBase {
     return false;
   }
 
+  public void registerCanLogging() {
+    m_frontLeft.registerCanLogging();
+    m_frontRight.registerCanLogging();
+    m_backLeft.registerCanLogging();
+    m_backRight.registerCanLogging();
+  }
+
   /**
    * Get joystick values 
    * Set motor inputs
