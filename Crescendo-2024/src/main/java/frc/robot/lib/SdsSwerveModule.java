@@ -88,7 +88,7 @@ public class SdsSwerveModule {
     driveMotor.getEncoder().setVelocityConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / (Constants.kSecondsPerMinute * Constants.kGearRatio));
     // native units of revolutions to meters
     //driveMotor.getEncoder().setVelocityConversionFactor(Constants.kMaxSpeed/5700);
-    //driveMotor.getEncoder().setPositionConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / Constants.kGearRatio);
+    driveMotor.getEncoder().setPositionConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / Constants.kGearRatio);
     driveMotorController = driveMotor.getPIDController();
     driveMotorController.setP(swerveDriveMotorP);
     driveMotorController.setI(swerveDriveMotorI);
@@ -145,9 +145,9 @@ public class SdsSwerveModule {
     }
     i = (i + 1) % 100;
 
-    SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Module Angle" + driveID,turningEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Commanded Angle" + driveID, state.angle.getRadians());
+    // SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Module Angle" + driveID,turningEncoder.getAbsolutePosition());
+    // SmartDashboard.putNumber("Commanded Angle" + driveID, state.angle.getRadians());
 
     driveMotorController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
     //if (turnOutput > 0.5 ) {

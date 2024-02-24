@@ -26,7 +26,7 @@ public class MoveToSpeakerPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.80);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.84);
   }
   
   // Called once the command ends or is interrupted.
