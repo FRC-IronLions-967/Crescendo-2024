@@ -85,9 +85,10 @@ public class SdsSwerveModule {
     /*
      * native units of rpm to m/s
      */
-    driveMotor.getEncoder().setVelocityConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / (Constants.kSecondsPerMinute * Constants.kGearRatio));
+    // driveMotor.getEncoder().setVelocityConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / (Constants.kSecondsPerMinute * Constants.kGearRatio));
     // native units of revolutions to meters
-    driveMotor.getEncoder().setPositionConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / Constants.kGearRatio);
+    driveMotor.getEncoder().setVelocityConversionFactor(Constants.kMaxSpeed/5700);
+    // driveMotor.getEncoder().setPositionConversionFactor((2.0 * Math.PI * Constants.kWheelRadius) / Constants.kGearRatio);
     driveMotorController = driveMotor.getPIDController();
     driveMotorController.setP(swerveDriveMotorP);
     driveMotorController.setI(swerveDriveMotorI);
