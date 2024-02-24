@@ -174,6 +174,10 @@ public class Drivetrain extends SubsystemBase {
     return false;
   }
 
+  public void resetGyro() {
+    m_gyro.reset();
+  }
+
   /**
    * Get joystick values 
    * Set motor inputs

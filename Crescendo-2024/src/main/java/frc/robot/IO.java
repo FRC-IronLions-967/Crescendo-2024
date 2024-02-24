@@ -23,6 +23,7 @@ public static IO getInstance() {
 public void teleopInit(){
 //put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
+driverController.whenButtonPressed("Y", new ResetGyro());
 Command intakeNote = new SequentialCommandGroup(
     new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
     new RetractIntakeCommand(),
