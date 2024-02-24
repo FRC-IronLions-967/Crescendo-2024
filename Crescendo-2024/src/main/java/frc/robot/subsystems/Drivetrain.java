@@ -202,8 +202,9 @@ public class Drivetrain extends SubsystemBase {
           Utils.squarePreserveSign(MathUtil.applyDeadband(driveController.getRightStickX(), 0.2))
               * Constants.kMaxAngularSpeed);
 
-      drive(xSpeed, ySpeed, rot, fieldRelative);
-      
+      if ( DriverStation.isTeleop() ) {
+        drive(xSpeed, ySpeed, rot, fieldRelative);
+      }
       // Update the pose
       updateOdometry();
 
