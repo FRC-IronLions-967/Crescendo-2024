@@ -29,7 +29,7 @@ public class RunIntakeInCommand extends Command {
   @Override
   public void execute() {
     // if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
-      SubsystemsInstance.getInstance().intakesubsystem.runIntake(3000);
+      SubsystemsInstance.getInstance().intakesubsystem.runIntake(4000);
     // }
   }
 

@@ -30,6 +30,7 @@ public class ScorerSubsystem extends SubsystemBase {
 
   private double kScorerMaxPosition;
   private double kScorerMinPosition;
+  private double pivotPosition;
   private double speedTolerance;
   private double kMaxNEOSpeed;
 
@@ -59,6 +60,7 @@ public class ScorerSubsystem extends SubsystemBase {
     scorerMotorPID.setI(Values.getInstance().getDoubleValue("scorerMotorI"));
     scorerMotorPID.setD(Values.getInstance().getDoubleValue("scorerMotorD"));
     scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
+    scorerMotorPID.setIMaxAccum(10000, 0);
 
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
@@ -99,10 +101,20 @@ public class ScorerSubsystem extends SubsystemBase {
     if(position > kScorerMaxPosition) position = kScorerMaxPosition;
   
     pivotMotorPID.setReference(position, ControlType.kPosition);
+    pivotPosition = position;
   }
 
   public double getScorerPosition() {
     return pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition();
+  }
+
+  public void adjustShooter(double delta) {
+    pivotPosition += delta; 
+
+    if(pivotPosition < kScorerMinPosition) pivotPosition = kScorerMinPosition;
+    if(pivotPosition > kScorerMaxPosition) pivotPosition = kScorerMaxPosition;
+  
+    pivotMotorPID.setReference(pivotPosition, ControlType.kPosition);
   }
 
   public boolean isNoteIn() {
@@ -126,7 +138,9 @@ public class ScorerSubsystem extends SubsystemBase {
         break;
       case RAMP_UP:
       scorerMotorPID.setReference(speed, ControlType.kVelocity);
-        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && speed + speedTolerance >= scorerMotor.getEncoder().getVelocity()) 
+        if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+            speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
+            IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) 
           state = ScorerStates.SHOOT;
         break;
       case SHOOT:
