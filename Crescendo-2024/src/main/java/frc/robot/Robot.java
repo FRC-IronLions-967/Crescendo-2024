@@ -63,12 +63,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = autoChooser.getSelected();
+    //m_autonomousCommand = autoChooser.getSelected();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    //if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.schedule();
+    //}
   }
 
   /** This function is called periodically during autonomous. */
