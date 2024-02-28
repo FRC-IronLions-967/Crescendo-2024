@@ -12,6 +12,7 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Utils.Values;
 import frc.robot.commands.*;
 
 public class IO { 
@@ -20,10 +21,19 @@ public class IO {
     private XBoxController manipulatorController;
     private ControlScheme closedLoopControlScheme;
     private ControlScheme manualControlScheme;
+    private double maxFeederSpeed;
+    private double speakerPostion;
+    private double ampPosition;
+    private double shooterMaxSpeed;
 
     private IO() {
         driverController = new XBoxController(0);
         manipulatorController = new XBoxController(1);
+
+        maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
+        speakerPostion = Values.getInstance().getDoubleValue("speakerPostion");
+        ampPosition = Values.getInstance().getDoubleValue("ampPosition");
+        shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
 
         Command intakeNote = new SequentialCommandGroup(
             new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
@@ -33,28 +43,28 @@ public class IO {
             new MoveToSpeakerPositionCommand()
         );
 
-        Command handOff = new ParallelCommandGroup(new TestRunFeeder(2000), new TestRunIntake(-3000));
+        Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
         Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
 
         List <ControlSchemeCommand> closedLoopCommands = new ArrayList<>();
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("B", new RunScorerCommand()));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(0.56)));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(0.82)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("A", intakeNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", new RetractIntakeCommand()));
 
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
         List <ControlSchemeCommand> manualCommands = new ArrayList<>();
-        manualCommands.add(new ControlSchemeOnPressedCommand("B", new TestRunScorer(5000)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("B", new TestRunScorer(shooterMaxSpeed)));
         manualCommands.add(new ControlSchemeOnReleasedCommand("B", new TestRunScorer(0)));
         manualCommands.add(new ControlSchemeOnPressedCommand("X", new ExtendIntakeCommand()));
         manualCommands.add(new ControlSchemeOnReleasedCommand("X", new RetractIntakeCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("A", new RunIntakeInCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("Y", handOff));
         manualCommands.add(new ControlSchemeOnReleasedCommand("Y", handOver));
-        manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(0.56)));
-        manualCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(0.82)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
 
         manualControlScheme = new ControlScheme(manualCommands);
     }

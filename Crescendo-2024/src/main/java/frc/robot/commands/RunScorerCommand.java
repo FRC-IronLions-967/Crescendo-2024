@@ -13,10 +13,12 @@ public class RunScorerCommand extends Command {
   private double kMaxNEOSpeed;
   private double tolerance;
   private double kScorerMaxPosition;
+  private double shooterMaxSpeed;
   public RunScorerCommand() {
     kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
     tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
     kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
+    shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -28,12 +30,7 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(0.75 <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition()) {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);
-    }else {
-      SubsystemsInstance.getInstance().scorersubsystem.runScorer(5000);   
-    }
-
+    SubsystemsInstance.getInstance().scorersubsystem.runScorer(shooterMaxSpeed);   
   }
 
   // Called once the command ends or is interrupted.
