@@ -60,7 +60,8 @@ public class IO {
         manualCommands.add(new ControlSchemeOnReleasedCommand("B", new TestRunScorer(0)));
         manualCommands.add(new ControlSchemeOnPressedCommand("X", new ExtendIntakeCommand()));
         manualCommands.add(new ControlSchemeOnReleasedCommand("X", new RetractIntakeCommand()));
-        manualCommands.add(new ControlSchemeOnPressedCommand("A", new RunIntakeInCommand()));
+        manualCommands.add(new ControlSchemeOnPressedCommand("A", new TestRunIntake(maxFeederSpeed)));
+        manualCommands.add(new ControlSchemeOnReleasedCommand("A", new TestRunIntake(0)));
         manualCommands.add(new ControlSchemeOnPressedCommand("Y", handOff));
         manualCommands.add(new ControlSchemeOnReleasedCommand("Y", handOver));
         manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
