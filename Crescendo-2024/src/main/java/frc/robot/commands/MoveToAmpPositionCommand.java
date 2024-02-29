@@ -10,12 +10,12 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class MoveToAmpPositionCommand extends Command {
   /** Creates a new TogglescorerPositionCommand. */
-  private double kScorerMaxPosition;
+  private double kScorerMinPosition;
   private double tolerance;
   public MoveToAmpPositionCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
+    kScorerMinPosition = Values.getInstance().getDoubleValue("kScorerMinPosition");
     tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
@@ -26,7 +26,7 @@ public class MoveToAmpPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.56);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(kScorerMinPosition);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +36,6 @@ public class MoveToAmpPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return kScorerMaxPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && kScorerMaxPosition + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
+    return kScorerMinPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && kScorerMinPosition + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
   }
 }

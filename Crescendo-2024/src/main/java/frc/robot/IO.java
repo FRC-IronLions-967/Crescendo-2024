@@ -88,7 +88,7 @@ driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
 manipulatorController.setControlScheme(closedLoopControlScheme);
 manipulatorController.whenButtonPressed("SELECT", new ToggleControlSchemeCommand());
 
-Command handOff = new ParallelCommandGroup(new TestRunFeeder(2000), new TestRunIntake(-3000));
+Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
 Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
 Command scoreIntoAmp = new SequentialCommandGroup(new MoveToAmpPositionCommand(), new RunScorerCommand());
 manipulatorController.whenButtonPressed("B", new RunScorerCommand());
