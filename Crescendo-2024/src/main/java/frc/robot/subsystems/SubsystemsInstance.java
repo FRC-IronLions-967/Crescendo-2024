@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 public class SubsystemsInstance {
     public Drivetrain drivetrain;
     public IntakeSubsystem intakesubsystem;

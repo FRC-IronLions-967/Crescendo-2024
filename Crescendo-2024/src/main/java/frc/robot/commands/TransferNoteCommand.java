@@ -10,10 +10,8 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class TransferNoteCommand extends Command {
   /** Creates a new TransferNote. */
-  private double kMaxNEOSpeed;
   private double maxFeederSpeed;
   public TransferNoteCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
     maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);

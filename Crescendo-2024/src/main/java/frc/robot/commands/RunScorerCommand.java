@@ -10,14 +10,8 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class RunScorerCommand extends Command {
   /** Creates a new RunScorerCommand. */
-  private double kMaxNEOSpeed;
-  private double tolerance;
-  private double kScorerMaxPosition;
   private double shooterMaxSpeed;
   public RunScorerCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
     shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
 
     // Use addRequirements() here to declare subsystem dependencies.

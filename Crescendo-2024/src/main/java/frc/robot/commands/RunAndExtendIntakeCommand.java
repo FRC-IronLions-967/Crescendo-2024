@@ -11,10 +11,8 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class RunAndExtendIntakeCommand extends Command {
   /** Creates a new RunAndExtendIntake. */
   private double kIntakeMinPosition;
-  private double tolerance;
   public RunAndExtendIntakeCommand() {
     kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
   }
