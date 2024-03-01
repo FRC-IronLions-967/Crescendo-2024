@@ -24,7 +24,7 @@ public class RunAndExtendIntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(Values.getInstance().getDoubleValue("maxFeederSpeed"));
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed"));
     SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMinPosition);
   }
 

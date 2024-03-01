@@ -31,11 +31,32 @@ public class IO {
         manipulatorController = new XBoxController(1);
 
         maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
-        speakerPostion = Values.getInstance().getDoubleValue("speakerPostion");
+        speakerPostion = Values.getInstance().getDoubleValue("speakerPosition");
         ampPosition = Values.getInstance().getDoubleValue("ampPosition");
         shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
 
-        Command intakeNote = new SequentialCommandGroup(
+        
+    }
+public static IO getInstance() {
+    if(instance == null) instance = new IO();
+
+    return instance;
+}
+
+public void switchControlScheme() {
+    if (manipulatorController.getControlScheme() == closedLoopControlScheme) {
+        manipulatorController.setControlScheme(manualControlScheme);
+    } else{
+        manipulatorController.setControlScheme(closedLoopControlScheme);
+    }
+}
+
+public boolean isManualMode() {
+    return manipulatorController.getControlScheme() == manualControlScheme;
+}
+public void teleopInit(){
+//put commands here
+Command intakeNote = new SequentialCommandGroup(
             new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
@@ -52,6 +73,7 @@ public class IO {
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("A", intakeNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
 
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
@@ -66,29 +88,14 @@ public class IO {
         manualCommands.add(new ControlSchemeOnReleasedCommand("Y", handOver));
         manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
         manualCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
+        manualCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
 
         manualControlScheme = new ControlScheme(manualCommands);
-    }
-public static IO getInstance() {
-    if(instance == null) instance = new IO();
 
-    return instance;
-}
-
-public void switchControlScheme() {
-    if (manipulatorController.getControlScheme() == closedLoopControlScheme) {
-        manipulatorController.setControlScheme(manualControlScheme);
-    } else{
-        manipulatorController.setControlScheme(closedLoopControlScheme);
-    }
-}
-public void teleopInit(){
-//put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
 driverController.whenButtonPressed("Y", new ResetGyro());
 
 manipulatorController.setControlScheme(closedLoopControlScheme);
-manipulatorController.whenButtonPressed("SELECT", new ToggleControlSchemeCommand());
 }
 public XBoxController getDriverController(){
     return driverController;

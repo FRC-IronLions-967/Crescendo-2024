@@ -43,6 +43,7 @@ public class ScorerSubsystem extends SubsystemBase {
   /** Creates a new ScorerSubsystem. */
   public ScorerSubsystem() {
     state = ScorerStates.IDLE;
+    startScorer = false;
 
     timer = new Timer();
 
@@ -62,6 +63,7 @@ public class ScorerSubsystem extends SubsystemBase {
     scorerMotorPID.setD(Values.getInstance().getDoubleValue("scorerMotorD"));
     scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
     scorerMotorPID.setIMaxAccum(10000, 0);
+    scorerMotor.setClosedLoopRampRate(0.25);
 
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
@@ -84,6 +86,7 @@ public class ScorerSubsystem extends SubsystemBase {
   }
 
   public void runScorer(double speed) {
+    SmartDashboard.putBoolean("runScorer Called", true);
     if (!startScorer) {
       startScorer = true;
       this.speed = speed;
@@ -128,41 +131,44 @@ public class ScorerSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("startScorer", startScorer);
     // This method will be called once per scheduler run
-    switch (state) {
-      case IDLE:
-        feederMotorPID.setReference(0, ControlType.kVelocity);
-        scorerMotorPID.setReference(0, ControlType.kVelocity);
-        if (startScorer) {
-          state = ScorerStates.RAMP_UP;
-        }
-        break;
-      case RAMP_UP:
-      scorerMotorPID.setReference(speed, ControlType.kVelocity);
-        if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
-            speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-            IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
-            (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
-            speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-            DriverStation.isAutonomousEnabled()))
-          state = ScorerStates.SHOOT;
-        break;
-      case SHOOT:
-      feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
-        if (!feederLimit1.get()) {
-          state = ScorerStates.DELAY;
-          timer.start();
-        }
-        break;
-      case DELAY:
-        if (timer.hasElapsed(0.5)) {
+    if (!IO.getInstance().isManualMode()) {
+      switch (state) {
+        case IDLE:
+          feederMotorPID.setReference(0, ControlType.kVelocity);
+          scorerMotorPID.setReference(0, ControlType.kVelocity);
+          if (startScorer) {
+            state = ScorerStates.RAMP_UP;
+          }
+          break;
+        case RAMP_UP:
+        scorerMotorPID.setReference(speed, ControlType.kVelocity);
+          if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+              speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
+              IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
+              (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+              speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
+              DriverStation.isAutonomousEnabled()))
+            state = ScorerStates.SHOOT;
+          break;
+        case SHOOT:
+        feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
+          if (!feederLimit1.get()) {
+            state = ScorerStates.DELAY;
+            timer.start();
+          }
+          break;
+        case DELAY:
+          if (timer.hasElapsed(0.5)) {
+            state = ScorerStates.IDLE;
+            startScorer = false;
+          }
+          break;
+        default:
           state = ScorerStates.IDLE;
           startScorer = false;
-        }
-        break;
-      default:
-        state = ScorerStates.IDLE;
-        startScorer = false;
+      }
     }
     hasNote = feederLimit1.get();
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
