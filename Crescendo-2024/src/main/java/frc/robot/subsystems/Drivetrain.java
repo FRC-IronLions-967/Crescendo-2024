@@ -39,6 +39,7 @@ public class Drivetrain extends SubsystemBase {
   private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4, 1);
   private final SdsSwerveModule m_backLeft = new SdsSwerveModule(7, 8, 3);
   private final SdsSwerveModule m_backRight = new SdsSwerveModule(1, 2, 0);
+  private XBoxController driveController;
 //first two colums above are done
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -57,6 +58,7 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     m_gyro.reset();
     fieldRelative = true;
+    driveController = IO.getInstance().getDriverController();
   }
 
   /**
@@ -115,7 +117,6 @@ public class Drivetrain extends SubsystemBase {
    */
   @Override 
     public void periodic(){
-      XBoxController driveController = IO.getInstance().getDriverController();
       // Get the x speed. We are inverting this because Xbox controllers return
       // negative values when we push forward.
       final var xSpeed = m_xspeedLimiter.calculate(
