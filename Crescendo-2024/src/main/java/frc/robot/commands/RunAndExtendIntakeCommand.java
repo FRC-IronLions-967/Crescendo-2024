@@ -31,12 +31,15 @@ public class RunAndExtendIntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("grabbed note");
     SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     return SubsystemsInstance.getInstance().intakesubsystem.isNoteIn();
+    
   }
 }

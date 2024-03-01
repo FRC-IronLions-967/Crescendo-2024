@@ -11,6 +11,8 @@ public class SubsystemsInstance {
         drivetrain = new Drivetrain();
         intakesubsystem = new IntakeSubsystem();
         scorersubsystem = new ScorerSubsystem();
+
+        drivetrain.setupPathPlanner();
         
 
         //CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -19,6 +21,7 @@ public class SubsystemsInstance {
        
 
     }
+
     public static SubsystemsInstance getInstance () {
         if(inst == null) inst = new SubsystemsInstance();
 

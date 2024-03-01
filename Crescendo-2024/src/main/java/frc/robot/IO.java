@@ -85,10 +85,10 @@ public void switchControlScheme() {
 public void teleopInit(){
 //put commands here
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
+driverController.whenButtonPressed("Y", new ResetGyro());
 
 manipulatorController.setControlScheme(closedLoopControlScheme);
 manipulatorController.whenButtonPressed("SELECT", new ToggleControlSchemeCommand());
-manipulatorController.whenButtonPressed("B", new RunScorerCommand());
 }
 public XBoxController getDriverController(){
     return driverController;
