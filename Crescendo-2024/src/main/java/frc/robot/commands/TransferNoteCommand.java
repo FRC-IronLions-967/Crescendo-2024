@@ -10,9 +10,9 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class TransferNoteCommand extends Command {
   /** Creates a new TransferNote. */
-  private double kMaxNEOSpeed;
+  private double maxFeederSpeed;
   public TransferNoteCommand() {
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
+    maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
@@ -25,8 +25,8 @@ public class TransferNoteCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-3000);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(3000);
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-maxFeederSpeed);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
   }
 
   // Called once the command ends or is interrupted.

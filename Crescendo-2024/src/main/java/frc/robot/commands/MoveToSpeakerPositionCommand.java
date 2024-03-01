@@ -26,7 +26,7 @@ public class MoveToSpeakerPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(0.84);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(kScorerMaxPosition);
   }
   
   // Called once the command ends or is interrupted.
@@ -36,6 +36,6 @@ public class MoveToSpeakerPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return 0.84 - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && 0.84 + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
+    return kScorerMaxPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && kScorerMaxPosition + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
   }
 }

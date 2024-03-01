@@ -148,7 +148,7 @@ public class ScorerSubsystem extends SubsystemBase {
           state = ScorerStates.SHOOT;
         break;
       case SHOOT:
-      feederMotorPID.setReference(3000, ControlType.kVelocity);
+      feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
         if (!feederLimit1.get()) {
           state = ScorerStates.DELAY;
           timer.start();

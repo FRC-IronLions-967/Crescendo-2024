@@ -5,14 +5,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Utils.Values;
-import frc.robot.subsystems.SubsystemsInstance;
+import frc.robot.IO;
 
-public class RunScorerCommand extends Command {
-  /** Creates a new RunScorerCommand. */
-  private double shooterMaxSpeed;
-  public RunScorerCommand() {
-    shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
+public class ToggleControlSchemeCommand extends Command {
+  /** Creates a new ToggleCommandSchemeCommand. */
+  public ToggleControlSchemeCommand() {
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -24,7 +21,7 @@ public class RunScorerCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.runScorer(shooterMaxSpeed);   
+    IO.getInstance().switchControlScheme();
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +31,6 @@ public class RunScorerCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
+    return true;
   }
 }
