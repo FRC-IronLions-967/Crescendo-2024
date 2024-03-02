@@ -132,7 +132,7 @@ public class ScorerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (!IO.getInstance().isManualMode()) {
+    //if (!IO.getInstance().isManualMode()) {
       switch (state) {
         case IDLE:
           SmartDashboard.putString("scorerstate", "IDLE");
@@ -172,7 +172,7 @@ public class ScorerSubsystem extends SubsystemBase {
           state = ScorerStates.IDLE;
           startScorer = false;
       }
-    }
+    //}
     hasNote = feederLimit1.get();
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());

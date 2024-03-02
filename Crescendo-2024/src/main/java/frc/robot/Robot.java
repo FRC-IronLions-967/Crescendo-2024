@@ -28,12 +28,15 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     subsystemsInst = SubsystemsInstance.getInstance();
+    subsystemsInst.drivetrain.setupPathPlanner();
     NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
     NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
     NamedCommands.registerCommand("RunAndExtendIntakeCommand", new RunAndExtendIntakeCommand());
     NamedCommands.registerCommand("RunIntakeInCommand", new RunIntakeInCommand());
     NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
+
+
 
     autoChooser = AutoBuilder.buildAutoChooser("Simple_Auto");
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -64,12 +67,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = autoChooser.getSelected();
+    m_autonomousCommand = autoChooser.getSelected();
 
     // schedule the autonomous command (example)
-    //if (m_autonomousCommand != null) {
-    //  m_autonomousCommand.schedule();
-    //}
+    if (m_autonomousCommand != null) {
+     m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
