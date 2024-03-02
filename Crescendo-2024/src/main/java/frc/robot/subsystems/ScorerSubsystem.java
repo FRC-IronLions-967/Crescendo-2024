@@ -131,11 +131,11 @@ public class ScorerSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("startScorer", startScorer);
     // This method will be called once per scheduler run
     if (!IO.getInstance().isManualMode()) {
       switch (state) {
         case IDLE:
+          SmartDashboard.putString("scorerstate", "IDLE");
           feederMotorPID.setReference(0, ControlType.kVelocity);
           scorerMotorPID.setReference(0, ControlType.kVelocity);
           if (startScorer) {
@@ -143,6 +143,7 @@ public class ScorerSubsystem extends SubsystemBase {
           }
           break;
         case RAMP_UP:
+        SmartDashboard.putString("scorerstate", "RAMP_UP");
         scorerMotorPID.setReference(speed, ControlType.kVelocity);
           if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
               speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
@@ -153,18 +154,15 @@ public class ScorerSubsystem extends SubsystemBase {
             state = ScorerStates.SHOOT;
           break;
         case SHOOT:
-        if (feederLimit1.get()) {
+        SmartDashboard.putString("scorerstate", "SHOOT");
           feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
           if (!feederLimit1.get()) {
             state = ScorerStates.DELAY;
             timer.start();
           }
-        } else {
-          scorerMotorPID.setReference(0, ControlType.kVelocity);
-          state = ScorerStates.IDLE;
-        }
           break;
         case DELAY:
+        SmartDashboard.putString("scorerstate", "DELAY");
           if (timer.hasElapsed(0.5)) {
             state = ScorerStates.IDLE;
             startScorer = false;

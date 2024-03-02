@@ -43,6 +43,8 @@ public class XBoxController extends Joystick implements ControlSchemeVisitor {
         buttonMap.put("RBUMP", new CustomJoystickButton(this, 6));
         buttonMap.put("SELECT", new CustomJoystickButton(this, 7));
         buttonMap.put("START", new CustomJoystickButton(this, 8));
+        buttonMap.put("LTRIG", new CustomTrigger(this::isLeftTriggerPressed));
+        buttonMap.put("RTRIG", new CustomTrigger(this::isRightTriggerPressed));
 
         for(int i = 1; i <= 8; i++) {
             Trigger button = new JoystickButton(this, i);
@@ -164,6 +166,14 @@ public class XBoxController extends Joystick implements ControlSchemeVisitor {
 
     public double getLeftStickY() {
         return this.getRawAxis(LEFT_Y_AXIS);
+    }
+
+    public boolean isLeftTriggerPressed() {
+        return (this.getRawAxis(LEFT_TRIGGER) > triggerTolerance);
+    }
+
+    public boolean isRightTriggerPressed() {
+        return (this.getRawAxis(RIGHT_TRIGGER) > triggerTolerance);
     }
 
     public void setTriggerTolerance(double newTolerance) {

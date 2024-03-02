@@ -57,12 +57,14 @@ public boolean isManualMode() {
 public void teleopInit(){
 //put commands here
 Command intakeNote = new SequentialCommandGroup(
-            new ParallelCommandGroup(new ExtendIntakeCommand(), new MoveToSpeakerPositionCommand()),
+            new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
             new MoveToSpeakerPositionCommand()
         );
+
+        Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToSpeakerPositionCommand());
 
         Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
         Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
@@ -74,6 +76,8 @@ Command intakeNote = new SequentialCommandGroup(
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("A", intakeNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", new RetractIntakeCommand()));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("X", sourceLoad));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
 
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
