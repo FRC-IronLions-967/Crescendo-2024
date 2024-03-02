@@ -9,16 +9,10 @@ import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class RunIntakeInCommand extends Command {
-  private double kIntakeMaxPosition;
-  private double tolerance;
-  private double kMaxNEOSpeed;
   /** Creates a new RunIntakeInCommand. */
   public RunIntakeInCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
-    kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    kMaxNEOSpeed = Values.getInstance().getDoubleValue("kMaxNEOSpeed");
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +23,7 @@ public class RunIntakeInCommand extends Command {
   @Override
   public void execute() {
     // if (SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() <= kIntakeMaxPosition + tolerance && SubsystemsInstance.getInstance().intakesubsystem.getIntakePosition() >= kIntakeMaxPosition - tolerance) {
-      SubsystemsInstance.getInstance().intakesubsystem.runIntake(4000);
+      SubsystemsInstance.getInstance().intakesubsystem.runIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed"));
     // }
   }
 

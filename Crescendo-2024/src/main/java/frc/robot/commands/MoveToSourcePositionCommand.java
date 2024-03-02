@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class TransferNoteCommand extends Command {
-  /** Creates a new TransferNote. */
-  private double maxFeederSpeed;
-  public TransferNoteCommand() {
-    maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
+public class MoveToSourcePositionCommand extends Command {
+  /** Creates a new TogglescorerPositionCommand. */
+  private double kScorerMinPosition;
+  private double tolerance;
+  public MoveToSourcePositionCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
+    kScorerMinPosition = Values.getInstance().getDoubleValue("kScorerMinPosition");
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
   // Called when the command is initially scheduled.
@@ -25,14 +26,13 @@ public class TransferNoteCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-maxFeederSpeed);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(kScorerMinPosition);
+    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(Values.getInstance().getDoubleValue("maxFeederSpeed"));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
     SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
   }
 

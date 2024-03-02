@@ -14,6 +14,7 @@ public class RetractIntakeCommand extends Command {
   private double kIntakeMaxPosition;
   public RetractIntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
+    
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
     tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
@@ -21,11 +22,14 @@ public class RetractIntakeCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    System.out.println("retracting");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      
       SubsystemsInstance.getInstance().intakesubsystem.moveIntake(kIntakeMaxPosition);
   }
   

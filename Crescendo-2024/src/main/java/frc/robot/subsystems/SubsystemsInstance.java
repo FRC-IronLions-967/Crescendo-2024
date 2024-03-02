@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 public class SubsystemsInstance {
     public Drivetrain drivetrain;
     public IntakeSubsystem intakesubsystem;
@@ -13,6 +11,8 @@ public class SubsystemsInstance {
         drivetrain = new Drivetrain();
         intakesubsystem = new IntakeSubsystem();
         scorersubsystem = new ScorerSubsystem();
+
+        drivetrain.setupPathPlanner();
         
 
         //CommandScheduler.getInstance().registerSubsystem(drivetrain);
@@ -21,6 +21,7 @@ public class SubsystemsInstance {
        
 
     }
+
     public static SubsystemsInstance getInstance () {
         if(inst == null) inst = new SubsystemsInstance();
 

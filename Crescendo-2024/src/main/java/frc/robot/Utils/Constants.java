@@ -12,7 +12,7 @@ import frc.robot.commands.DoNothingCommand;
 public final class Constants {
 
     public static final double kMaxSpeed = 4.42; // 4.42 meters per second / 14.5 ft per second
-    public static final double kMaxAcceleration = 2.15; // 2.15 meters per second per second
+    public static final double kMaxAcceleration = 3.0; // 2.15 meters per second per second
     public static final double kMaxAngularSpeed = 2 * Math.PI; // 1 rotation per second
     public static final double kMaxAngularAcceleration = Math.PI; // 1/2 roation per second squared
     public static final double kWheelRadius = 0.0483;
