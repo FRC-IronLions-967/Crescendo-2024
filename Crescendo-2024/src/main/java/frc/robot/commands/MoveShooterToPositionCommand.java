@@ -28,7 +28,6 @@ public class MoveShooterToPositionCommand extends Command {
   public void execute() {
     SubsystemsInstance.getInstance().scorersubsystem.adjustShooter(angle);
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
