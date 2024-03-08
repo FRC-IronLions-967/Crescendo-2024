@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class TransferNoteCommand extends Command {
-  /** Creates a new TransferNote. */
-  private double maxFeederSpeed;
-  public TransferNoteCommand() {
-    maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
+public class MoveShooterToPositionCommand extends Command {
+  /** Creates a new MoveShooterToPositionCommand. */
+  private double angle;
+  private double tolerance;
+  public MoveShooterToPositionCommand(double angle) {
+    this.angle = angle;
+    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
@@ -25,21 +26,18 @@ public class TransferNoteCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-maxFeederSpeed);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
+    SubsystemsInstance.getInstance().scorersubsystem.adjustShooter(angle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
-    System.out.println("Transfered");
+    System.out.println("At position");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
+    return angle - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && angle + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
   }
 }

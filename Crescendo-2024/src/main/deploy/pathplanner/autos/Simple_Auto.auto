@@ -57,6 +57,24 @@
                 "data": {
                   "name": "TransferNoteCommand"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "MiddleNoteShot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunScorerCommand"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 10.0
+                }
               }
             ]
           }

@@ -78,6 +78,8 @@ Command intakeNote = new SequentialCommandGroup(
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("X", sourceLoad));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
 
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
@@ -93,11 +95,13 @@ Command intakeNote = new SequentialCommandGroup(
         manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
         manualCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         manualCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
-
+        manualCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
         manualControlScheme = new ControlScheme(manualCommands);
 
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
 driverController.whenButtonPressed("Y", new ResetGyro());
+
 
 manipulatorController.setControlScheme(closedLoopControlScheme);
 }
