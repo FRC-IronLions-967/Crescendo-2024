@@ -26,7 +26,7 @@ public class MoveShooterToPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.adjustShooter(angle);
+    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(angle);
   }
   // Called once the command ends or is interrupted.
   @Override

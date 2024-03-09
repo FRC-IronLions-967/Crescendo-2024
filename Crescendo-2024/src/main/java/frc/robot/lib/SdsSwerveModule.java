@@ -62,7 +62,9 @@ public class SdsSwerveModule {
 
     driveMotor = new CANSparkMax(driveMotorCANId, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
+    turningMotor.setSmartCurrentLimit(40);
     turningMotor.setIdleMode(IdleMode.kBrake);
+    driveMotor.setSecondaryCurrentLimit(80);
     driveMotor.setIdleMode(IdleMode.kCoast);
     driveID = driveMotorCANId;
 
