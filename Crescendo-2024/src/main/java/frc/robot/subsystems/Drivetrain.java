@@ -35,6 +35,8 @@ import frc.robot.lib.controls.XBoxController;
 public class Drivetrain extends SubsystemBase {
   public boolean fieldRelative;
 
+  private double limiter;
+
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(10);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(10);
@@ -75,8 +77,8 @@ public class Drivetrain extends SubsystemBase {
       this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
       new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-          new PIDConstants(0.1, 0.0, 1.5), // Translation PID constants
-          new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+          new PIDConstants(0.1, 0.0, 0.0), // Translation PID constants
+          new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
           3.0, // Max module speed, in m/s
           Math.sqrt(0.308 * 0.308 + 0.308 * 0.308), // Drive base radius in meters. Distance from robot center to furthest module.
           new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -108,6 +110,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    chassisSpeeds.omegaRadiansPerSecond = -chassisSpeeds.omegaRadiansPerSecond;
     var swerveModuleStates =
         Constants.m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.kMaxSpeed);
@@ -186,16 +189,20 @@ public class Drivetrain extends SubsystemBase {
    */
   @Override 
     public void periodic(){
+      limiter = 1.0;
+      if (driveController.getRightTrigger() > 0.5) {
+        limiter = 0.5;
+      }
       // Get the x speed. We are inverting this because Xbox controllers return
       // negative values when we push forward.
-      final var xSpeed = m_xspeedLimiter.calculate(
+      final var xSpeed = limiter * m_xspeedLimiter.calculate(
       Utils.squarePreserveSign(-MathUtil.applyDeadband(driveController.getLeftStickY(), 0.2))
           * Constants.kMaxSpeed);
 
       // Get the y speed or sideways/strafe speed. We are inverting this because
       // we want a positive value when we pull to the left. Xbox controllers
       // return positive values when you pull to the right by default.
-      final var ySpeed = m_yspeedLimiter.calculate(
+      final var ySpeed = limiter * m_yspeedLimiter.calculate(
           Utils.squarePreserveSign(MathUtil.applyDeadband(-driveController.getLeftStickX(), 0.2))
               * Constants.kMaxSpeed);
 
@@ -203,7 +210,7 @@ public class Drivetrain extends SubsystemBase {
       // positive value when we pull to the left (remember, CCW is positive in
       // mathematics). Xbox controllers return positive values when you pull to
       // the right by default.
-      final var rot = m_rotLimiter.calculate(
+      final var rot = limiter * m_rotLimiter.calculate(
           Utils.squarePreserveSign(MathUtil.applyDeadband(driveController.getRightStickX(), 0.2))
               * Constants.kMaxAngularSpeed);
 

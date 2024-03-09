@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.397577668134552,
-      "y": 5.5171022120335245
+      "x": 0.8488191383965702,
+      "y": 4.522894353845579
     },
-    "rotation": 180.0
+    "rotation": 120.96375653207342
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Start to 2"
+                  "pathName": "Start to 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveToTransferPositionCommand"
                 }
               }
             ]
@@ -68,12 +74,6 @@
                 "type": "named",
                 "data": {
                   "name": "RunScorerCommand"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 10.0
                 }
               }
             ]

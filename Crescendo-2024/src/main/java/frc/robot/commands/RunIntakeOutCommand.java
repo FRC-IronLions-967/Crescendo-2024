@@ -8,15 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveShooterToPositionCommand extends Command {
-  /** Creates a new MoveShooterToPositionCommand. */
-  private double angle;
-  private double tolerance;
-  public MoveShooterToPositionCommand(double angle) {
-    this.angle = angle;
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
+public class RunIntakeOutCommand extends Command {
+  /** Creates a new RunIntakeOutCommand. */
+
+  public RunIntakeOutCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
+    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -26,17 +23,18 @@ public class MoveShooterToPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.moveShooter(angle);
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed"));
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("At position");
+    SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return angle - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && angle + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
+    return !SubsystemsInstance.getInstance().intakesubsystem.isNoteIn();
   }
 }

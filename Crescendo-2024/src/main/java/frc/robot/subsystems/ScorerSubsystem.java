@@ -64,6 +64,7 @@ public class ScorerSubsystem extends SubsystemBase {
     scorerMotorPID.setFF(Values.getInstance().getDoubleValue("scorerMotorFF"));
     scorerMotorPID.setIMaxAccum(10000, 0);
     scorerMotor.setClosedLoopRampRate(0.25);
+    scorerMotor.setSmartCurrentLimit(60);
 
     pivotMotorPID = pivotMotor.getPIDController();
     pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
@@ -75,6 +76,7 @@ public class ScorerSubsystem extends SubsystemBase {
     pivotMotorPID.setFF(Values.getInstance().getDoubleValue("scorerPivotMotorFF"));
     pivotMotor.setClosedLoopRampRate(0.5);
     pivotMotorPID.setPositionPIDWrappingEnabled(false);
+    pivotMotor.setSmartCurrentLimit(30);
     
     feederMotorPID = feederMotor.getPIDController();
     feederMotorPID.setP(Values.getInstance().getDoubleValue("feederMotorP"));
@@ -83,6 +85,7 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
     feederLimit1 = new DigitalInput(Values.getInstance().getIntValue("feederLimit1"));
     feederMotor.setClosedLoopRampRate(0.25);
+    feederMotor.setSmartCurrentLimit(30);
   }
 
   public void runScorer(double speed) {

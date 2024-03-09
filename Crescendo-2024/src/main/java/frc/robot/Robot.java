@@ -35,11 +35,11 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("RunIntakeInCommand", new RunIntakeInCommand());
     NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
-    NamedCommands.registerCommand("MiddleNoteShot", new MoveShooterToPositionCommand(0.771));
+    NamedCommands.registerCommand("MiddleNoteShot", new MoveShooterToPositionCommand(0.761));
+    NamedCommands.registerCommand("MoveToTransferPositionCommand", new MoveToTransferPositionCommand());
 
 
-
-    autoChooser = AutoBuilder.buildAutoChooser("Simple_Auto");
+    autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 

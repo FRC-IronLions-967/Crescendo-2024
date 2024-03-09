@@ -56,12 +56,17 @@ public boolean isManualMode() {
 }
 public void teleopInit(){
 //put commands here
-Command intakeNote = new SequentialCommandGroup(
+        Command intakeNote = new SequentialCommandGroup(
             new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
             new MoveToSpeakerPositionCommand()
+        );
+
+        Command ampIntake = new SequentialCommandGroup(
+            new MoveIntakeToAmpPositionCommand(),
+            new RunIntakeOutCommand()
         );
 
         Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToSpeakerPositionCommand());
@@ -78,9 +83,12 @@ Command intakeNote = new SequentialCommandGroup(
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("X", sourceLoad));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
-
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.001)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.001)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", ampIntake));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot"))));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
         List <ControlSchemeCommand> manualCommands = new ArrayList<>();
@@ -97,6 +105,10 @@ Command intakeNote = new SequentialCommandGroup(
         manualCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));
         manualCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("N", new MoveIntakeToAmpPositionCommand()));
+        manualCommands.add(new ControlSchemeOnReleasedCommand("N", new RetractIntakeCommand()));
+        manualCommands.add(new ControlSchemeOnPressedCommand("S", new RunIntakeOutCommand()));
+        manualCommands.add(new ControlSchemeOnReleasedCommand("S", new TestRunIntake(0)));
         manualControlScheme = new ControlScheme(manualCommands);
 
 driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());

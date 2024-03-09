@@ -45,6 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorPID.setFF(Values.getInstance().getDoubleValue("intakeMotorFF"));
     intakeMotor.setClosedLoopRampRate(0.75);
     intakeMotor.setOpenLoopRampRate(0.75);
+    intakeMotor.setSmartCurrentLimit(30);
 
     pivotMotor = new CANSparkMax(10, MotorType.kBrushless);
     pivotMotorPID = pivotMotor.getPIDController();
@@ -57,6 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
     pivotMotorPID.setFF(Values.getInstance().getDoubleValue("intakePivotMotorFF"));
     pivotMotor.setClosedLoopRampRate(0.5);
     pivotMotorPID.setPositionPIDWrappingEnabled(false);
+    pivotMotor.setSmartCurrentLimit(30);
 
     isNoteIn = new DigitalInput(2);
     hasNote = false;
