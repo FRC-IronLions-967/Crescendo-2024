@@ -87,7 +87,7 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", ampIntake));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", new RetractIntakeCommand()));
-        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot");)));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot"))));
 
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
