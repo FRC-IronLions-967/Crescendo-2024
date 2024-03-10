@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
     NamedCommands.registerCommand("MiddleNoteShot", new MoveShooterToPositionCommand(0.761));
     NamedCommands.registerCommand("MoveToTransferPositionCommand", new MoveToTransferPositionCommand());
+    NamedCommands.registerCommand("StageShot", new MoveShooterToPositionCommand(0.751));
 
 
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
