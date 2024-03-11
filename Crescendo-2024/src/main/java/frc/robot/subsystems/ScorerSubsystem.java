@@ -166,7 +166,7 @@ public class ScorerSubsystem extends SubsystemBase {
           break;
         case DELAY:
         SmartDashboard.putString("scorerstate", "DELAY");
-          if (timer.hasElapsed(0.5)) {
+          if (timer.hasElapsed(0.25)) {
             state = ScorerStates.IDLE;
             startScorer = false;
           }

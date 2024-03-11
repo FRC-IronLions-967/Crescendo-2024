@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.686610888233325,
-      "y": 6.76
+      "x": 0.7023114046172616,
+      "y": 6.698557841565223
     },
-    "rotation": -119.19921356199447
+    "rotation": -123.69006752459678
   },
   "command": {
     "type": "sequential",
@@ -28,9 +28,91 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "RunAndExtendIntakeCommand"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "Start to 1"
+                  "pathName": "Start to 4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "SpinUpScorer"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "RetractIntakeCommand"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "MoveToTransferPositionCommand"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "TransferNoteCommand"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StageShot"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 to Stage Shot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunScorerCommand"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Stage Shot to 5"
                 }
               },
               {
@@ -47,9 +129,21 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "5 To Stage Shot"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "SpinUpScorer"
+                      }
+                    },
                     {
                       "type": "parallel",
                       "data": {
@@ -78,125 +172,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "MiddleNoteShot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunScorerCommand"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunAndExtendIntakeCommand"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1 to 2"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "2 to 3"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "RetractIntakeCommand"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "MoveToTransferPositionCommand"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "TransferNoteCommand"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "MiddleNoteShot"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunScorerCommand"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunAndExtendIntakeCommand"
+                        "name": "StageShot"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RetractIntakeCommand"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "MoveToTransferPositionCommand"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TransferNoteCommand"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "MiddleNoteShot"
           }
         },
         {

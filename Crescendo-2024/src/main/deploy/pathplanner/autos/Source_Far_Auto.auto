@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7023114046172616,
-      "y": 6.698557841565223
+      "x": 0.688059153896086,
+      "y": 4.432449976011063
     },
-    "rotation": -123.69006752459678
+    "rotation": 119.05460409907711
   },
   "command": {
     "type": "sequential",
@@ -28,15 +28,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "RunAndExtendIntakeCommand"
+                  "pathName": "Start to 8"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Start to 4"
+                  "name": "RunAndExtendIntakeCommand"
                 }
               }
             ]
@@ -47,9 +47,21 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "8 to Start"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "SpinUpScorer"
+                      }
+                    },
                     {
                       "type": "parallel",
                       "data": {
@@ -57,13 +69,13 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "RetractIntakeCommand"
+                              "name": "MoveToTransferPositionCommand"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "MoveToTransferPositionCommand"
+                              "name": "RetractIntakeCommand"
                             }
                           }
                         ]
@@ -78,19 +90,19 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StageShot"
+                        "name": "MoveToSpeakerPositionCommand"
                       }
                     }
                   ]
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4 to Stage Shot"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunScorerCommand"
           }
         },
         {
@@ -100,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Stage Shot to 5"
+                  "pathName": "Start to 7"
                 }
               },
               {
@@ -119,7 +131,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "5 To Stage Shot"
+                  "pathName": "7 to Start"
                 }
               },
               {
@@ -127,9 +139,21 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "SpinUpScorer"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "MoveToTransferPositionCommand"
+                            }
+                          },
                           {
                             "type": "named",
                             "data": {
@@ -139,22 +163,16 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "MoveToTransferPositionCommand"
+                              "name": "TransferNoteCommand"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "MoveToSpeakerPositionCommand"
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "TransferNoteCommand"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StageShot"
                       }
                     }
                   ]
