@@ -9,107 +9,173 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class LEDController {
 
-    private final int kRedHue = 0;
-    private final int kBlueHue = 160;
-    private final int kMinPulse = 105;
-    private final int kMaxPulse = 255;
+    private final double kMinPulse = 0.3;
+    private final double kMaxPulse = 0.9;
     private final int kCyclesPerFlash = 25;
+    private final int kCyclesPerPulse = 100;
     
     private AddressableLED strip;
     private AddressableLEDBuffer stripBuffer;
 
-    private int allianceColorHue;
-    private int disabledColorValue;
-    private boolean disabledColorValueAscending;
+    private Color allianceColor;
+    private double pulse = kMinPulse;
+    private boolean reversePulse;
 
-    private int alternatingFlashCount;
-    private Color alternatingColor1;
-    private Color alternatingColor2;
+    private int flashCount;
+    private boolean alternatingColorFlip;
 
     private static BooleanSupplier intakeSupplier;
     private static BooleanSupplier readySupplier;
 
+    /**
+     * Control a single strand of LEDs
+     * @param pwmPort on the rio for signaling
+     * @param numLeds in the strand
+     */
     public LEDController(int pwmPort, int numLeds) {
         strip = new AddressableLED(pwmPort);
         stripBuffer = new AddressableLEDBuffer(numLeds);
         strip.setLength(numLeds);
 
-        disabledColorValue = kMinPulse;
-        allianceColorHue = kRedHue;
+        allianceColor = Color.kFirstRed;
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             if(alliance.get() == DriverStation.Alliance.Blue); {
-                allianceColorHue = kBlueHue;
+                allianceColor = Color.kFirstBlue;
             }
 
         }
-
-        alternatingColor1 = Color.kGreen;
-        alternatingColor2 = Color.kBlack;
-        alternatingFlashCount = 1;
     }
 
+    /**
+     * Method to configure robot sensors that influence LED signaling
+     * @param intakeSupplier supplier to return when the intake has a Note
+     * @param readySupplier supplier to return when the scorer is ready to shoot
+     */
     public static void ConfigureLedEvents(BooleanSupplier intakeSupplier, BooleanSupplier readySupplier) {
         LEDController.intakeSupplier = intakeSupplier;
         LEDController.readySupplier = readySupplier;
     }
 
-    public void disabledPeriodic() {
+    /**
+     * Heartbeat based on 20ms clock tick to update behavior timers
+     */
+    public void heartbeat() {
+        //update flash every half second
+        if (flashCount >= kCyclesPerFlash ) {
+            flashCount = 1;
+            alternatingColorFlip = !alternatingColorFlip;
+        } else { flashCount++; }
+
+        //Color Fade update
         //Is it getting brighter or dimmer
-        if (disabledColorValue >= kMaxPulse){
-            disabledColorValueAscending = false;
-        } else if (disabledColorValue <= kMinPulse) {
-            disabledColorValueAscending = true;
+        if (pulse >= kMaxPulse){
+            reversePulse = false;
+        } else if (pulse <= kMinPulse) {
+            reversePulse = true;
         }
         //Adjust color value
-        if (disabledColorValueAscending) {
-            disabledColorValue += 1;
+        if (reversePulse) {
+            pulse += (kMaxPulse - kMinPulse)/kCyclesPerPulse;
         } else {
-            disabledColorValue -= 1;
-        }
-        //Set color on all LEDs
-        for (int i = 0; i < stripBuffer.getLength(); i++){
-            stripBuffer.setHSV(i, allianceColorHue, 255, disabledColorValue);
+            pulse -= (kMaxPulse - kMinPulse)/kCyclesPerPulse;
         }
     }
 
+    /**
+     * LED behavior when the robot is disabled
+     */
+    public void disabledPeriodic() {
+        setAllPulse(allianceColor);
+    }
+
+    /**
+     * LED behavior when the robot is enabled
+     */
     public void enabledPeriodic() {
         boolean intakeIn = intakeSupplier.getAsBoolean();
         boolean scorerIn = readySupplier.getAsBoolean();
         if(intakeIn) {
             //Set all to Green
-            for (int i = 0; i < stripBuffer.getLength(); i++){
-                stripBuffer.setLED(i, Color.kGreen);
-            }
+            setAllSolid(Color.kGreen);
         } else if (scorerIn) {
-            
-            //Swap colors every half second
-            if (alternatingFlashCount >= kCyclesPerFlash ) {
-                alternatingFlashCount = 1;
-                Color swapColor = alternatingColor1;
-                alternatingColor1 = alternatingColor2;
-                alternatingColor2 = swapColor;
-            } else { alternatingFlashCount++; }
-
-            //Set to alternatingly flash Green
-            for (int i = 0; i < stripBuffer.getLength(); i++){
-                if ( i % 2 == 0) {
-                    stripBuffer.setLED(i, alternatingColor1);
-                } else {
-                    stripBuffer.setLED(i, alternatingColor2);
-                }
-                
-            }
+            //Flash alternating LEDs between green and black
+            setAlternatingFlash(Color.kGreen, Color.kBlack);
         } else {
             //Set all to Red
-            for (int i = 0; i < stripBuffer.getLength(); i++){
-                stripBuffer.setLED(i, Color.kRed);
+            setAllSolid(halfBrightness(Color.kRed));
+        }
+    }
+
+    /**
+     * Method to cut the brightness of a color preset in half
+     * @param color at normal brightness
+     * @return dim color
+     */
+    private Color halfBrightness(Color color) {
+        return new Color(color.red/2, color.green/2, color.blue/2);
+    }
+
+    /**
+     * Method to set alternating LEDs in the string to flash between two colors
+     * @param color1
+     * @param color2
+     */
+    private void setAlternatingFlash(Color color1, Color color2) {
+        //Set to alternatingly flash Green
+        for (int i = 0; i < stripBuffer.getLength(); i++){
+            if (alternatingColorFlip) {
+                if ( i % 2 == 0) {
+                    stripBuffer.setLED(i, color1);
+                } else {
+                    stripBuffer.setLED(i, color2);
+                } 
+            } else {
+                if ( i % 2 == 0) {
+                    stripBuffer.setLED(i, color2);
+                } else {
+                    stripBuffer.setLED(i, color1);
+                } 
             }
         }
     }
 
-    private Color halfBrightness(Color color) {
-        return new Color(color.red/2, color.green/2, color.blue/2);
+    /**
+     * Method to set all of the LEDs to the specified color
+     * @param color
+     */
+    private void setAllSolid(Color color) {
+        for (int i = 0; i < stripBuffer.getLength(); i++){
+            stripBuffer.setLED(i, color);
+        }
     }
+
+    /**
+     * Method to flash all LEDs in the string between the specified colors
+     * @param color1 
+     * @param color2
+     */
+    private void setAllFlash(Color color1, Color color2){
+        //Set to alternatingly flash Green
+        for (int i = 0; i < stripBuffer.getLength(); i++){
+            if (alternatingColorFlip) {
+                stripBuffer.setLED(i, color1);
+            } else {
+                stripBuffer.setLED(i, color2);
+            }
+        }
+    }
+
+    /**
+     * Method to gently pulse the brightness of all LEDs
+     * @param color of the LEDs when they pulse
+     */
+    private void setAllPulse(Color color){
+        Color pulseColor = new Color(color.red*pulse, color.green*pulse, color.blue*pulse);
+        for (int i = 0; i < stripBuffer.getLength(); i++){
+            stripBuffer.setLED(i, pulseColor);
+        }
+    }
+
 
 }
