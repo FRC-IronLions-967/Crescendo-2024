@@ -108,4 +108,8 @@ public class LEDController {
         }
     }
 
+    private Color halfBrightness(Color color) {
+        return new Color(color.red/2, color.green/2, color.blue/2);
+    }
+
 }

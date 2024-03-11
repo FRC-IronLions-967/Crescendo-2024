@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.686610888233325,
-      "y": 6.76
+      "x": 0.719347003253704,
+      "y": 6.687148630915306
     },
-    "rotation": -116.90222672983876
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -34,15 +34,15 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Start to 1"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "MoveToTransferPositionCommand"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Start to 1"
                 }
               }
             ]
