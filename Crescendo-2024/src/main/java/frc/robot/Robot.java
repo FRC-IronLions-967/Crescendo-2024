@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SubsystemsInstance;
 import frc.robot.commands.*;
+import frc.robot.lib.LEDController;
 
 public class Robot extends TimedRobot {
   private SubsystemsInstance subsystemsInst;
   private Command m_autonomousCommand;
   private SendableChooser<Command> autoChooser;
+  private LEDController ledController;
   
 
   /**
@@ -41,6 +43,8 @@ public class Robot extends TimedRobot {
 
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    ledController = new LEDController(0, 20);
   }
 
   /**
@@ -79,6 +83,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    ledController.enabledPeriodic();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -90,6 +95,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    ledController.enabledPeriodic();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -98,7 +104,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    ledController.disabledPeriodic();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
