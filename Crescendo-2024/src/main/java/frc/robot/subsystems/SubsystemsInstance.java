@@ -16,7 +16,7 @@ public class SubsystemsInstance {
 
         drivetrain.setupPathPlanner();
         
-        LEDController.ConfigureLedEvents(intakesubsystem.isNoteIn(), scorersubsystem.isNoteIn());
+        LEDController.ConfigureLedEvents(() -> intakesubsystem.isNoteIn(), () -> scorersubsystem.isNoteIn());
         //CommandScheduler.getInstance().registerSubsystem(drivetrain);
         // CommandScheduler.getInstance().registerSubsystem(intakesubsystem);
         // CommandScheduler.getInstance().registerSubsystem(scorersubsystem);
