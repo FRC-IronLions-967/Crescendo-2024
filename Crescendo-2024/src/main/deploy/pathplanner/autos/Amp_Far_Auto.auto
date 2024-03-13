@@ -34,9 +34,64 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "SpinUpScorer"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "Start to 4"
+                  "pathName": "Start to 1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveToTransferPositionCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TransferNoteCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "MiddleNoteShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoFireCommand"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunAndExtendIntakeCommand"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1 to 4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveToTransferPositionCommand"
                 }
               }
             ]
@@ -47,32 +102,19 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "4 to Stage Shot"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "named",
                       "data": {
-                        "name": "SpinUpScorer"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "RetractIntakeCommand"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "MoveToTransferPositionCommand"
-                            }
-                          }
-                        ]
+                        "name": "RetractIntakeCommand"
                       }
                     },
                     {
@@ -91,9 +133,9 @@
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "4 to Stage Shot"
+                  "name": "SpinUpScorer"
                 }
               }
             ]
@@ -102,13 +144,19 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunAndExtendIntakeCommand"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -118,7 +166,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "RunAndExtendIntakeCommand"
+                  "name": "MoveToTransferPositionCommand"
                 }
               }
             ]
@@ -141,26 +189,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "SpinUpScorer"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "RetractIntakeCommand"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "MoveToTransferPositionCommand"
-                            }
-                          }
-                        ]
+                        "name": "RetractIntakeCommand"
                       }
                     },
                     {
@@ -184,7 +213,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         }
       ]

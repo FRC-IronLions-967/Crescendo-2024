@@ -82,7 +82,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         },
         {
@@ -144,7 +144,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         },
         {
@@ -206,7 +206,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         }
       ]
