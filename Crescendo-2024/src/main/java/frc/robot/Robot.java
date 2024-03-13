@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    ledController = new LEDController(0, 20);
+    ledController = new LEDController(0, 37);
   }
 
   /**
@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("Manual Mode", IO.getInstance().isManualMode());
+    ledController.heartbeat();
   }
 
   /**

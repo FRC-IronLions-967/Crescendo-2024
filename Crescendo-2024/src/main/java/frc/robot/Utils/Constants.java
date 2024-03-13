@@ -13,7 +13,7 @@ public final class Constants {
 
     public static final double kDriveRadius = Math.sqrt(0.308 * 0.308 + 0.308 * 0.308); //radius from center of drive to one module
     public static final double kMaxSpeed = 4.42; // 4.42 meters per second / 14.5 ft per second
-    public static final double kMaxAcceleration = 6.0; // 6.0 meters per second per second
+    public static final double kMaxAcceleration = 10.0; // 6.0 meters per second per second
     public static final double kMaxAngularSpeed = kMaxSpeed / kDriveRadius; // Maximum angular velocity 
     public static final double kMaxAngularAcceleration = kMaxAcceleration / kDriveRadius; // Maximum angular acceleration
     public static final double kWheelRadius = 0.0483;

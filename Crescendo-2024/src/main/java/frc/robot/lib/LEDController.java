@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class LEDController {
 
-    private final double kMinPulse = 0.3;
-    private final double kMaxPulse = 0.9;
+    private final double kMinPulse = 0.1;
+    private final double kMaxPulse = 0.99;
     private final int kCyclesPerFlash = 25;
     private final int kCyclesPerPulse = 100;
     
@@ -37,14 +37,10 @@ public class LEDController {
         stripBuffer = new AddressableLEDBuffer(numLeds);
         strip.setLength(numLeds);
 
-        allianceColor = Color.kFirstRed;
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            if(alliance.get() == DriverStation.Alliance.Blue); {
-                allianceColor = Color.kFirstBlue;
-            }
+        strip.start();
 
-        }
+        allianceColor = Color.kRed;
+        
     }
 
     /**
@@ -65,6 +61,16 @@ public class LEDController {
         if (flashCount >= kCyclesPerFlash ) {
             flashCount = 1;
             alternatingColorFlip = !alternatingColorFlip;
+
+            //Get alliance
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                if(alliance.get() == DriverStation.Alliance.Blue) {
+                    allianceColor = Color.kBlue;
+                } else {
+                    allianceColor = Color.kRed;
+                }
+            }
         } else { flashCount++; }
 
         //Color Fade update
@@ -80,6 +86,8 @@ public class LEDController {
         } else {
             pulse -= (kMaxPulse - kMinPulse)/kCyclesPerPulse;
         }
+
+        strip.setData(stripBuffer);
     }
 
     /**
@@ -100,10 +108,10 @@ public class LEDController {
             setAllSolid(Color.kGreen);
         } else if (scorerIn) {
             //Flash alternating LEDs between green and black
-            setAlternatingFlash(Color.kGreen, Color.kBlack);
+            setAlternatingFlash(halfBrightness(Color.kGreen) , Color.kBlack);
         } else {
             //Set all to Red
-            setAllSolid(halfBrightness(Color.kRed));
+            setAllSolid(halfBrightness(allianceColor));
         }
     }
 
