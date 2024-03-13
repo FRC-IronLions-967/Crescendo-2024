@@ -69,9 +69,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setupPathPlanner(){
-    m_gyro.reset();
+    //m_gyro.reset();
       // Configure the AutoBuilder last
-      AutoBuilder.configureHolonomic(
+    AutoBuilder.configureHolonomic(
       this::getPose, // Robot pose supplier
       this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -80,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
           new PIDConstants(0.1, 0.0, 0.0), // Translation PID constants
           new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
           3.0, // Max module speed, in m/s
-          Math.sqrt(0.308 * 0.308 + 0.308 * 0.308), // Drive base radius in meters. Distance from robot center to furthest module.
+          Constants.kDriveRadius, // Drive base radius in meters. Distance from robot center to furthest module.
           new ReplanningConfig() // Default path replanning config. See the API for the options here
       ),
       this::shouldFlipPath,
@@ -180,7 +180,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetGyro() {
-    m_gyro.reset();
+    m_gyro.zeroYaw();
   }
 
   /**

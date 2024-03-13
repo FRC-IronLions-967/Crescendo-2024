@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import frc.robot.lib.LEDController;
+
 public class SubsystemsInstance {
     public Drivetrain drivetrain;
     public IntakeSubsystem intakesubsystem;
@@ -14,7 +16,7 @@ public class SubsystemsInstance {
 
         drivetrain.setupPathPlanner();
         
-
+        LEDController.ConfigureLedEvents(() -> intakesubsystem.isNoteIn(), () -> scorersubsystem.isNoteIn());
         //CommandScheduler.getInstance().registerSubsystem(drivetrain);
         // CommandScheduler.getInstance().registerSubsystem(intakesubsystem);
         // CommandScheduler.getInstance().registerSubsystem(scorersubsystem);

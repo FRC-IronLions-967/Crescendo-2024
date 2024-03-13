@@ -11,10 +11,11 @@ import frc.robot.commands.DoNothingCommand;
 
 public final class Constants {
 
+    public static final double kDriveRadius = Math.sqrt(0.308 * 0.308 + 0.308 * 0.308); //radius from center of drive to one module
     public static final double kMaxSpeed = 4.42; // 4.42 meters per second / 14.5 ft per second
-    public static final double kMaxAcceleration = 3.0; // 2.15 meters per second per second
-    public static final double kMaxAngularSpeed = 2.0 * Math.PI; // 1 rotation per second
-    public static final double kMaxAngularAcceleration = 4.0 * Math.PI; // 1/2 roation per second squared
+    public static final double kMaxAcceleration = 10.0; // 6.0 meters per second per second
+    public static final double kMaxAngularSpeed = kMaxSpeed / kDriveRadius; // Maximum angular velocity 
+    public static final double kMaxAngularAcceleration = kMaxAcceleration / kDriveRadius; // Maximum angular acceleration
     public static final double kWheelRadius = 0.0483;
     //the number above is acurate
     public static final double kGearRatio = 6.75;
