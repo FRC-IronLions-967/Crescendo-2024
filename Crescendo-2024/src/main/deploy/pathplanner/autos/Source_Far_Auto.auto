@@ -159,20 +159,20 @@
                             "data": {
                               "name": "RetractIntakeCommand"
                             }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "TransferNoteCommand"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "MoveToSpeakerPositionCommand"
-                            }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "TransferNoteCommand"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "MoveToSpeakerPositionCommand"
                       }
                     }
                   ]

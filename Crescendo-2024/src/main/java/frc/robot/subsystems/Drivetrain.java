@@ -183,6 +183,20 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.zeroYaw();
   }
 
+  public void setDriveToBrake() {
+    m_backLeft.changeDriveToBrake();
+    m_backRight.changeDriveToBrake();
+    m_frontLeft.changeDriveToBrake();
+    m_frontRight.changeDriveToBrake();
+  }
+
+  public void setDriveToCoast() {
+    m_backLeft.changeDriveToCoast();
+    m_backRight.changeDriveToCoast();
+    m_frontLeft.changeDriveToCoast();
+    m_frontRight.changeDriveToCoast();
+  }
+
   /**
    * Get joystick values 
    * Set motor inputs

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1583834278779672,
-      "y": 5.38735077470155
+      "x": 0.719347003253704,
+      "y": 6.687148630915306
     },
-    "rotation": -119.19921356199447
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -28,15 +28,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Start to 1"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "RunAndExtendIntakeCommand"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Start to 1"
                 }
               }
             ]
@@ -144,7 +144,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         },
         {
@@ -206,7 +206,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunScorerCommand"
+            "name": "AutoFireCommand"
           }
         }
       ]
