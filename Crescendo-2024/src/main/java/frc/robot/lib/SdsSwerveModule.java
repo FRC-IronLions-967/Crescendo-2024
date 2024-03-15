@@ -126,6 +126,14 @@ public class SdsSwerveModule {
         driveMotor.getEncoder().getPosition(), new Rotation2d(turningEncoder.getAbsolutePosition()));
   }
 
+  public void changeDriveToBrake() {
+    driveMotor.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void changeDriveToCoast() {
+    driveMotor.setIdleMode(IdleMode.kCoast);
+  }
+
   /**
    * Sets the desired state for the module.
    *

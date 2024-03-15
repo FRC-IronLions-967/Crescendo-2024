@@ -39,6 +39,9 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
     NamedCommands.registerCommand("MiddleNoteShot", new MoveShooterToPositionCommand(0.761));
     NamedCommands.registerCommand("MoveToTransferPositionCommand", new MoveToTransferPositionCommand());
+    NamedCommands.registerCommand("StageShot", new MoveShooterToPositionCommand(0.756));
+    NamedCommands.registerCommand("SpinUpScorer", new TestRunScorer(5000));
+    NamedCommands.registerCommand("AutoFireCommand", new AutoFireCommand());
 
 
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
@@ -79,6 +82,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
      m_autonomousCommand.schedule();
     }
+    SubsystemsInstance.getInstance().drivetrain.setDriveToBrake();
   }
 
   /** This function is called periodically during autonomous. */
@@ -91,6 +95,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     IO.getInstance().teleopInit();
+    SubsystemsInstance.getInstance().drivetrain.setDriveToCoast();
   }
 
   /** This function is called periodically during operator control. */

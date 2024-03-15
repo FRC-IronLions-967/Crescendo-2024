@@ -84,7 +84,7 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setD(Values.getInstance().getDoubleValue("feederMotorD"));
     feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
     feederLimit1 = new DigitalInput(Values.getInstance().getIntValue("feederLimit1"));
-    feederMotor.setClosedLoopRampRate(0.25);
+    feederMotor.setClosedLoopRampRate(0.1);
     feederMotor.setSmartCurrentLimit(30);
   }
 
@@ -92,7 +92,16 @@ public class ScorerSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("runScorer Called", true);
     if (!startScorer) {
       startScorer = true;
+      state = ScorerStates.IDLE;
       this.speed = speed;
+    }
+  }
+
+  public boolean autoReadyToFire() {
+    if (scorerMotor.getEncoder().getVelocity() > 4600) {
+      return true;
+    }else {
+      return false;
     }
   }
 
@@ -130,6 +139,7 @@ public class ScorerSubsystem extends SubsystemBase {
 
   public void moveFlyWheel(double speed) {
     scorerMotorPID.setReference(speed, ControlType.kVelocity);
+    state = ScorerStates.AUTONOMOUS;
   }
 
   @Override
@@ -166,10 +176,12 @@ public class ScorerSubsystem extends SubsystemBase {
           break;
         case DELAY:
         SmartDashboard.putString("scorerstate", "DELAY");
-          if (timer.hasElapsed(0.5)) {
+          if (timer.hasElapsed(0.25)) {
             state = ScorerStates.IDLE;
             startScorer = false;
           }
+          break;
+        case AUTONOMOUS:
           break;
         default:
           state = ScorerStates.IDLE;
