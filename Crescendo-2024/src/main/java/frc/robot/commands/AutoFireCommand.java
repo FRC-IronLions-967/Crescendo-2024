@@ -23,7 +23,9 @@ public class AutoFireCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(Values.getInstance().getDoubleValue("maxFeederSpeed"));
+    if(SubsystemsInstance.getInstance().scorersubsystem.autoReadyToFire()) {
+      SubsystemsInstance.getInstance().scorersubsystem.runFeeder(Values.getInstance().getDoubleValue("maxFeederSpeed"));
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -4,5 +4,6 @@ public enum ScorerStates {
     IDLE,
     RAMP_UP,
     SHOOT,
-    DELAY
+    DELAY,
+    AUTONOMOUS
 }

@@ -24,19 +24,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Start to 8"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "RunAndExtendIntakeCommand"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Start to 8"
                 }
               }
             ]
@@ -90,7 +90,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "MoveToSpeakerPositionCommand"
+                        "name": "StageShot"
                       }
                     }
                   ]
@@ -106,9 +106,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunAndExtendIntakeCommand"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -118,7 +124,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "RunAndExtendIntakeCommand"
+                  "name": "SpinUpScorer"
                 }
               }
             ]
@@ -138,12 +144,6 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "SpinUpScorer"
-                      }
-                    },
                     {
                       "type": "parallel",
                       "data": {
@@ -172,7 +172,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "MoveToSpeakerPositionCommand"
+                        "name": "StageShot"
                       }
                     }
                   ]
