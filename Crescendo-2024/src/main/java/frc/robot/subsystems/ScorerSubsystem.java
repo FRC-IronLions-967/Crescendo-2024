@@ -148,7 +148,7 @@ public class ScorerSubsystem extends SubsystemBase {
     //if (!IO.getInstance().isManualMode()) {
       switch (state) {
         case IDLE:
-          SmartDashboard.putString("scorerstate", "IDLE");
+          // SmartDashboard.putString("scorerstate", "IDLE");
           feederMotorPID.setReference(0, ControlType.kVelocity);
           scorerMotorPID.setReference(0, ControlType.kVelocity);
           if (startScorer) {
@@ -156,7 +156,7 @@ public class ScorerSubsystem extends SubsystemBase {
           }
           break;
         case RAMP_UP:
-        SmartDashboard.putString("scorerstate", "RAMP_UP");
+        // SmartDashboard.putString("scorerstate", "RAMP_UP");
         scorerMotorPID.setReference(speed, ControlType.kVelocity);
           if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
               speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
@@ -167,7 +167,7 @@ public class ScorerSubsystem extends SubsystemBase {
             state = ScorerStates.SHOOT;
           break;
         case SHOOT:
-        SmartDashboard.putString("scorerstate", "SHOOT");
+        // SmartDashboard.putString("scorerstate", "SHOOT");
           feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
           if (!feederLimit1.get()) {
             state = ScorerStates.DELAY;
@@ -175,7 +175,7 @@ public class ScorerSubsystem extends SubsystemBase {
           }
           break;
         case DELAY:
-        SmartDashboard.putString("scorerstate", "DELAY");
+        // SmartDashboard.putString("scorerstate", "DELAY");
           if (timer.hasElapsed(0.25)) {
             state = ScorerStates.IDLE;
             startScorer = false;
@@ -189,10 +189,10 @@ public class ScorerSubsystem extends SubsystemBase {
       }
     //}
     hasNote = feederLimit1.get();
-    SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
-    SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
+    // SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Feeder Limit", hasNote);
   }
 }

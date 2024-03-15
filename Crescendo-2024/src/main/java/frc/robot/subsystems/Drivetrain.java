@@ -235,7 +235,7 @@ public class Drivetrain extends SubsystemBase {
       updateOdometry();
 
       SmartDashboard.putBoolean("FieldRelative", fieldRelative);
-      SmartDashboard.putNumber("GyroHeading", m_gyro.getRotation2d().getDegrees());
+      // SmartDashboard.putNumber("GyroHeading", m_gyro.getRotation2d().getDegrees());
     } 
      
 }

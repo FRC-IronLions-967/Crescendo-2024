@@ -11,12 +11,10 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class MoveToSourcePositionCommand extends Command {
   /** Creates a new TogglescorerPositionCommand. */
   private double kScorerMinPosition;
-  private double tolerance;
   public MoveToSourcePositionCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
     kScorerMinPosition = Values.getInstance().getDoubleValue("kScorerMinPosition");
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }
 
   // Called when the command is initially scheduled.

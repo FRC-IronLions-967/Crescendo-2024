@@ -34,7 +34,6 @@ public class TransferNoteCommand extends Command {
   public void end(boolean interrupted) {
     SubsystemsInstance.getInstance().intakesubsystem.runIntake(0);
     SubsystemsInstance.getInstance().scorersubsystem.runFeeder(0);
-    System.out.println("Transfered");
   }
 
   // Returns true when the command should end.
