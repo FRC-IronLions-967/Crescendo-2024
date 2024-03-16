@@ -22,7 +22,7 @@ public class IO {
     private ControlScheme closedLoopControlScheme;
     private ControlScheme manualControlScheme;
     private double maxFeederSpeed;
-    private double speakerPostion;
+    private double kScorerMaxPosition;
     private double ampPosition;
     private double shooterMaxSpeed;
 
@@ -31,7 +31,7 @@ public class IO {
         manipulatorController = new XBoxController(1);
 
         maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
-        speakerPostion = Values.getInstance().getDoubleValue("speakerPosition");
+        kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
         ampPosition = Values.getInstance().getDoubleValue("ampPosition");
         shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
 
@@ -76,7 +76,7 @@ public void teleopInit(){
 
         List <ControlSchemeCommand> closedLoopCommands = new ArrayList<>();
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("B", new RunScorerCommand()));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(kScorerMaxPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("A", intakeNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", new RetractIntakeCommand()));
@@ -100,7 +100,7 @@ public void teleopInit(){
         manualCommands.add(new ControlSchemeOnReleasedCommand("A", new TestRunIntake(0)));
         manualCommands.add(new ControlSchemeOnPressedCommand("Y", handOff));
         manualCommands.add(new ControlSchemeOnReleasedCommand("Y", handOver));
-        manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(speakerPostion)));
+        manualCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(kScorerMaxPosition)));
         manualCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         manualCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));

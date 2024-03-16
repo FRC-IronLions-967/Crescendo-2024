@@ -84,16 +84,15 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setD(Values.getInstance().getDoubleValue("feederMotorD"));
     feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
     feederLimit1 = new DigitalInput(Values.getInstance().getIntValue("feederLimit1"));
-    feederMotor.setClosedLoopRampRate(0.1);
+    feederMotor.setClosedLoopRampRate(0.2);
     feederMotor.setSmartCurrentLimit(30);
   }
 
   public void runScorer(double speed) {
-    SmartDashboard.putBoolean("runScorer Called", true);
+    state = ScorerStates.IDLE;
+    this.speed = speed;
     if (!startScorer) {
       startScorer = true;
-      state = ScorerStates.IDLE;
-      this.speed = speed;
     }
   }
 
@@ -148,7 +147,7 @@ public class ScorerSubsystem extends SubsystemBase {
     //if (!IO.getInstance().isManualMode()) {
       switch (state) {
         case IDLE:
-          // SmartDashboard.putString("scorerstate", "IDLE");
+          SmartDashboard.putString("scorerstate", "IDLE");
           feederMotorPID.setReference(0, ControlType.kVelocity);
           scorerMotorPID.setReference(0, ControlType.kVelocity);
           if (startScorer) {
@@ -156,7 +155,7 @@ public class ScorerSubsystem extends SubsystemBase {
           }
           break;
         case RAMP_UP:
-        // SmartDashboard.putString("scorerstate", "RAMP_UP");
+        SmartDashboard.putString("scorerstate", "RAMP_UP");
         scorerMotorPID.setReference(speed, ControlType.kVelocity);
           if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
               speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
@@ -167,7 +166,7 @@ public class ScorerSubsystem extends SubsystemBase {
             state = ScorerStates.SHOOT;
           break;
         case SHOOT:
-        // SmartDashboard.putString("scorerstate", "SHOOT");
+        SmartDashboard.putString("scorerstate", "SHOOT");
           feederMotorPID.setReference(Values.getInstance().getDoubleValue("maxFeederSpeed"), ControlType.kVelocity);
           if (!feederLimit1.get()) {
             state = ScorerStates.DELAY;
@@ -175,7 +174,7 @@ public class ScorerSubsystem extends SubsystemBase {
           }
           break;
         case DELAY:
-        // SmartDashboard.putString("scorerstate", "DELAY");
+        SmartDashboard.putString("scorerstate", "DELAY");
           if (timer.hasElapsed(0.25)) {
             state = ScorerStates.IDLE;
             startScorer = false;

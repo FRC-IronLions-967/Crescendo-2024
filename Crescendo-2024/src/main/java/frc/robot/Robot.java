@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("StageShot", new MoveShooterToPositionCommand(0.756));
     NamedCommands.registerCommand("SpinUpScorer", new TestRunScorer(5000));
     NamedCommands.registerCommand("AutoFireCommand", new AutoFireCommand());
+    NamedCommands.registerCommand("AmpStageShot", new MoveShooterToPositionCommand(0.75));
 
 
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");

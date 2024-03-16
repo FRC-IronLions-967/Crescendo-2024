@@ -11,20 +11,28 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class RunScorerCommand extends Command {
   /** Creates a new RunScorerCommand. */
   private double shooterMaxSpeed;
+  private boolean hasRun;
   public RunScorerCommand() {
     shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
+    
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    hasRun = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().scorersubsystem.runScorer(shooterMaxSpeed);   
+    if (!hasRun) {
+      SubsystemsInstance.getInstance().scorersubsystem.runScorer(shooterMaxSpeed);  
+      hasRun = true;
+    }
+     
   }
 
   // Called once the command ends or is interrupted.
