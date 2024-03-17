@@ -60,13 +60,7 @@ public void teleopInit(){
             new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
-            new TransferNoteCommand(),
-            new MoveToSpeakerPositionCommand()
-        );
-
-        Command ampIntake = new SequentialCommandGroup(
-            new MoveIntakeToAmpPositionCommand(),
-            new RunIntakeOutCommand()
+            new TransferNoteCommand()
         );
 
         Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToSpeakerPositionCommand());
@@ -85,8 +79,7 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.001)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.001)));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", ampIntake));
-        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("speakerPosition"))));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot"))));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
