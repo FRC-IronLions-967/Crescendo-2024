@@ -61,6 +61,7 @@ public void teleopInit(){
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
+            new TransferNoteCommand(),
             new MoveToSpeakerPositionCommand()
         );
 
@@ -87,8 +88,9 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.001)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", ampIntake));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("speakerPosition"))));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot"))));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
+        // closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
         closedLoopControlScheme = new ControlScheme(closedLoopCommands);
 
         List <ControlSchemeCommand> manualCommands = new ArrayList<>();
