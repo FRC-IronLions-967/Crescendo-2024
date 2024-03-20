@@ -61,7 +61,6 @@ public void teleopInit(){
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
-            new TransferNoteCommand(),
             new MoveToSpeakerPositionCommand()
         );
 
