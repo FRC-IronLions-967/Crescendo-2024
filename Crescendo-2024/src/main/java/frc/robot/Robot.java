@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     subsystemsInst.drivetrain.setupPathPlanner();
     NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
     NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
-    NamedCommands.registerCommand("RunAndExtendIntakeCommand", new RunAndExtendIntakeCommand());
+    NamedCommands.registerCommand("RunAndExtendIntakeCommand", new AutoRunAndExtendIntakeCommand());
     NamedCommands.registerCommand("RunIntakeInCommand", new RunIntakeInCommand());
     NamedCommands.registerCommand("RetractIntakeCommand", new RetractIntakeCommand());
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());

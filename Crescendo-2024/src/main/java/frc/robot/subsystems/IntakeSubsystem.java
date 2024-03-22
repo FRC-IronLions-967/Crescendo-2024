@@ -95,7 +95,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     hasNote = isNoteIn.get();
     // SmartDashboard.putNumber("Intake Speed", intakeMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("Intake Angle", getIntakePosition());
+    SmartDashboard.putNumber("Intake Angle", getIntakePosition());
     SmartDashboard.putBoolean("Limit Switch", hasNote);
   }
 }
