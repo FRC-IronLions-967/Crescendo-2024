@@ -61,7 +61,7 @@ public void teleopInit(){
             new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
-            new MoveToSpeakerPositionCommand()
+            new MoveToTransferPositionCommand()
         );
 
         Command ampIntake = new SequentialCommandGroup(

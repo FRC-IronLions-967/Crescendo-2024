@@ -188,7 +188,7 @@ public class ScorerSubsystem extends SubsystemBase {
       }
     //}
     hasNote = feederLimit1.get();
-    // SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
