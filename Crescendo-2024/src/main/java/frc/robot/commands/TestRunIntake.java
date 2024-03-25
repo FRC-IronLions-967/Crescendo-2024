@@ -13,7 +13,6 @@ public class TestRunIntake extends Command {
   public TestRunIntake(double speed) {
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
   }
 
   // Called when the command is initially scheduled.

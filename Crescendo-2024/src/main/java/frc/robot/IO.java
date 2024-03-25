@@ -69,6 +69,22 @@ public void teleopInit(){
             new RunIntakeOutCommand()
         );
 
+        Command flail = new ParallelCommandGroup(
+            new ExtendIntakeCommand(),
+            new MoveToAmpPositionCommand(),
+            new TestRunScorer(shooterMaxSpeed),
+            new TestRunIntake(-Values.getInstance().getDoubleValue("intakeMaxSpeed")),
+            new TestRunFeeder(maxFeederSpeed)
+        );
+
+        Command unFlail = new ParallelCommandGroup(
+            new MoveIntakeToAmpPositionCommand(),
+            new MoveToTransferPositionCommand(),
+            new TestRunScorer(0),
+            new TestRunIntake(0),
+            new TestRunFeeder(0)
+        );
+
         Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToSpeakerPositionCommand());
 
         Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
@@ -85,8 +101,8 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.001)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.001)));
-        closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", ampIntake));
-        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", flail));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("Y", unFlail));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("speakerPosition"))));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot"))));
         // closedLoopCommands.add(new ControlSchemeOnPressedCommand("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));

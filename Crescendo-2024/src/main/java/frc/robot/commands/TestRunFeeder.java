@@ -13,7 +13,6 @@ public class TestRunFeeder extends Command {
   public TestRunFeeder(double speed) {
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
   }
 
   // Called when the command is initially scheduled.
