@@ -97,11 +97,14 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    var swerveModuleStates =
-        Constants.m_kinematics.toSwerveModuleStates(
-            fieldRelative
+    ChassisSpeeds chassisSpeeds = fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(-m_gyro.getFusedHeading()))
-                : new ChassisSpeeds(xSpeed, ySpeed, rot));
+                : new ChassisSpeeds(xSpeed, ySpeed, rot);
+    //Time slice discretization code taken from 254/YAGSL
+    //Compensates for second order kinematic drift
+    ChassisSpeeds.discretize(chassisSpeeds, 0.02); 
+    var swerveModuleStates =
+        Constants.m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -111,6 +114,10 @@ public class Drivetrain extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
     chassisSpeeds.omegaRadiansPerSecond = -chassisSpeeds.omegaRadiansPerSecond;
+
+    //Time slice discretization code taken from 254/YAGSL
+    //Compensates for second order kinematic drift
+    ChassisSpeeds.discretize(chassisSpeeds, 0.02); 
     var swerveModuleStates =
         Constants.m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.kMaxSpeed);
@@ -138,7 +145,6 @@ public class Drivetrain extends SubsystemBase {
           m_backLeft.getPosition(),
           m_backRight.getPosition()
         });
-        new Pose2d(5.0/* change these*/, 13.5, new Rotation2d());
   }
 
   public Pose2d getPose() {
