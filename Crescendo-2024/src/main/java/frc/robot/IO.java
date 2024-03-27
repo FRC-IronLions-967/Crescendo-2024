@@ -65,20 +65,21 @@ public void teleopInit(){
         );
 
         Command ampIntake = new SequentialCommandGroup(
-            new MoveIntakeToAmpPositionCommand(),
+            new MoveIntakeToUnJamPositionCommand(),
             new RunIntakeOutCommand()
         );
 
         Command flail = new ParallelCommandGroup(
-            new ExtendIntakeCommand(),
+            // new ExtendIntakeCommand(),
+            new MoveIntakeToUnJamPositionCommand(),
             new MoveToAmpPositionCommand(),
-            new TestRunScorer(shooterMaxSpeed),
-            new TestRunIntake(-Values.getInstance().getDoubleValue("intakeMaxSpeed")),
+            new TestRunScorer(1000),
+            new TestRunIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed")),
             new TestRunFeeder(maxFeederSpeed)
         );
 
         Command unFlail = new ParallelCommandGroup(
-            new MoveIntakeToAmpPositionCommand(),
+            new RetractIntakeCommand(),
             new MoveToTransferPositionCommand(),
             new TestRunScorer(0),
             new TestRunIntake(0),
@@ -122,7 +123,7 @@ public void teleopInit(){
         manualCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.01)));
         manualCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.01)));
-        manualCommands.add(new ControlSchemeOnPressedCommand("N", new MoveIntakeToAmpPositionCommand()));
+        manualCommands.add(new ControlSchemeOnPressedCommand("N", new MoveIntakeToUnJamPositionCommand()));
         manualCommands.add(new ControlSchemeOnReleasedCommand("N", new RetractIntakeCommand()));
         manualCommands.add(new ControlSchemeOnPressedCommand("S", new RunIntakeOutCommand()));
         manualCommands.add(new ControlSchemeOnReleasedCommand("S", new TestRunIntake(0)));

@@ -15,7 +15,7 @@ public class RetractIntakeCommand extends Command {
   public RetractIntakeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     
-    addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
+    // addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     kIntakeMaxPosition = Values.getInstance().getDoubleValue("kIntakeMaxPosition");
     tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
   }

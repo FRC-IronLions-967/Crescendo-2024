@@ -5,16 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Utils.Values;
+// import frc.robot.Utils.Values;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveIntakeToAmpPositionCommand extends Command {
+public class MoveIntakeToUnJamPositionCommand extends Command {
   /** Creates a new MoveIntakeToAmpPositionCommand. */
-  private double intakeAmpPosition;
-  private double tolerance;
-  public MoveIntakeToAmpPositionCommand() {
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
-    intakeAmpPosition = Values.getInstance().getDoubleValue("intakeAmpPosition");
+  // private double tolerance;
+  public MoveIntakeToUnJamPositionCommand() {
+    // tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
   }
@@ -26,7 +24,7 @@ public class MoveIntakeToAmpPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(intakeAmpPosition);
+    SubsystemsInstance.getInstance().intakesubsystem.moveIntake(0.6);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +34,6 @@ public class MoveIntakeToAmpPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intakeAmpPosition - tolerance <= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition() && intakeAmpPosition + tolerance >= SubsystemsInstance.getInstance().scorersubsystem.getScorerPosition();
+    return true;
   }
 }

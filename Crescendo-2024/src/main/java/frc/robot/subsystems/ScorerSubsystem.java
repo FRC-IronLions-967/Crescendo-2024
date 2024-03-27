@@ -84,7 +84,7 @@ public class ScorerSubsystem extends SubsystemBase {
     feederMotorPID.setD(Values.getInstance().getDoubleValue("feederMotorD"));
     feederMotorPID.setFF(Values.getInstance().getDoubleValue("feederMotorFF"));
     feederLimit1 = new DigitalInput(Values.getInstance().getIntValue("feederLimit1"));
-    feederMotor.setClosedLoopRampRate(0.2);
+    feederMotor.setClosedLoopRampRate(0.25);
     feederMotor.setSmartCurrentLimit(30);
   }
 
