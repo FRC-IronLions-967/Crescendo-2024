@@ -16,7 +16,7 @@ public final class Constants {
     public static final double kMaxAcceleration = 10.0; // 6.0 meters per second per second
     public static final double kMaxAngularSpeed = kMaxSpeed / kDriveRadius; // Maximum angular velocity 
     public static final double kMaxAngularAcceleration = kMaxAcceleration / kDriveRadius; // Maximum angular acceleration
-    public static final double kWheelRadius = 0.0483;
+    public static final double kWheelRadius = 0.0489;
     //the number above is acurate
     public static final double kGearRatio = 6.75;
     //needs tunings
@@ -52,5 +52,88 @@ public final class Constants {
       kSwerveOffsets.put(3, 0.23217007031624007);
     }
 
+    public static final Map<Double, Double> swerveRotMap = new HashMap<>();
+    static {
+      double y;
+      y = 0.00;
+      for (double x = 0.00; x < 1.01; x = x + 0.01) {
+        if (x < -0.90) {
+          y = y - 0.03;//-1.00
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.80 && x > -0.90) {
+          y = y - 0.015;//-0.70
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.70 && x > -0.80) {
+          y = y - 0.013;//-0.55
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.60 && x > -0.70) {
+          y = y - 0.011;//-0.42
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.50 && x > -0.60) {
+          y = y - 0.008;//-0.31
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.40 && x > -0.50) {
+          y = y - 0.007;//-0.23
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.30 && x > -0.40) {
+          y = y - 0.006;//-0.16
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.20 && x > -0.30) {
+          y = y - 0.005;//-0.10
+          swerveRotMap.put(x, y);
+        }
+        if (x < -0.10 && x > -0.20) {
+          y = y - 0.005;//-0.05
+          swerveRotMap.put(x, y);
+        }
+        if (x < 0.10 && x > -0.10) {
+          y = 0;//0.00
+          swerveRotMap.put(x, y);
+        }
+        if (x >= 0.1 && x < 0.2) {
+          y = y + 0.005;//0.05
+          swerveRotMap.put(x, y);
+        }
+        if (x >= 0.2 && x < 0.3) {
+          y = y + 0.005;//0.10
+          swerveRotMap.put(x, y);
+        }
+        if (x >= 0.3 && x < 0.4) {
+          y = y + 0.006;//0.16
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.4 && x < 0.5) {
+          y = y + 0.007;//0.23
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.5 && x < 0.6) {
+          y = y + 0.008;//0.31
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.6 && x < 0.7) {
+          y = y + 0.011;//0.42
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.7 && x < 0.8) {
+          y = y + 0.013;//0.55
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.8 && x < 0.9) {
+          y = y + 0.015;//0.70
+          swerveRotMap.put(x, y);        
+        }
+        if (x >= 0.9) {
+          y = y + 0.03;//1.00
+          swerveRotMap.put(x, y);          
+        }
+      }
+    }
 
 }

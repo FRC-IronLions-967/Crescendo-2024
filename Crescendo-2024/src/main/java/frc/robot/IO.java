@@ -58,10 +58,14 @@ public void teleopInit(){
 //put commands here
         Command intakeNote = new SequentialCommandGroup(
             new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
-            new RunIntakeInCommand(),
             new RetractIntakeCommand(),
             new TransferNoteCommand(),
             new MoveToTransferPositionCommand()
+        );
+
+        Command retractNote = new SequentialCommandGroup(
+            new ParallelCommandGroup(new RetractIntakeCommand(), new MoveToTransferPositionCommand()),
+            new TransferNoteCommand()
         );
 
         Command ampIntake = new SequentialCommandGroup(
@@ -96,7 +100,7 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("LBUMP", new TestMoveScorer(kScorerMaxPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("RBUMP", new TestMoveScorer(ampPosition)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("A", intakeNote));
-        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", new RetractIntakeCommand()));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", retractNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("X", sourceLoad));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
