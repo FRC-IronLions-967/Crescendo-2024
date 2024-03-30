@@ -43,8 +43,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorPID.setI(Values.getInstance().getDoubleValue("intakeMotorI"));
     intakeMotorPID.setD(Values.getInstance().getDoubleValue("intakeMotorD"));
     intakeMotorPID.setFF(Values.getInstance().getDoubleValue("intakeMotorFF"));
-    intakeMotor.setClosedLoopRampRate(0.75);
-    intakeMotor.setOpenLoopRampRate(0.75);
+    intakeMotor.setClosedLoopRampRate(0.25);
+    intakeMotor.setOpenLoopRampRate(0.25);
     intakeMotor.setSmartCurrentLimit(30);
 
     pivotMotor = new CANSparkMax(10, MotorType.kBrushless);

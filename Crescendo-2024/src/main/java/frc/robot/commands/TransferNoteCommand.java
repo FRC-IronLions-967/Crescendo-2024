@@ -10,9 +10,12 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class TransferNoteCommand extends Command {
   /** Creates a new TransferNote. */
+  private boolean isNote;
   private double maxFeederSpeed;
+  private double intakeTransferSpeed;
   public TransferNoteCommand() {
     maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
+    intakeTransferSpeed = Values.getInstance().getDoubleValue("intakeTransferSpeed");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
     addRequirements(SubsystemsInstance.getInstance().scorersubsystem);
@@ -20,13 +23,17 @@ public class TransferNoteCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    isNote = SubsystemsInstance.getInstance().intakesubsystem.isNoteIn();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SubsystemsInstance.getInstance().intakesubsystem.runIntake(-maxFeederSpeed);
-    SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
+    if (isNote) {
+      SubsystemsInstance.getInstance().intakesubsystem.runIntake(-intakeTransferSpeed);
+      SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -39,6 +46,6 @@ public class TransferNoteCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn();
+    return SubsystemsInstance.getInstance().scorersubsystem.isNoteIn() || !isNote;
   }
 }

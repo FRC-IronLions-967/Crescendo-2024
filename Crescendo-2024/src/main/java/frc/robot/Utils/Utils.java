@@ -12,4 +12,8 @@ public class Utils {
         return x*x;
     }
 
+    public static double cubePreserveSign(double x) {
+        return x*x*x;
+    }
+
 }

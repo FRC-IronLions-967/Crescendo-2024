@@ -16,7 +16,7 @@ public final class Constants {
     public static final double kMaxAcceleration = 10.0; // 6.0 meters per second per second
     public static final double kMaxAngularSpeed = kMaxSpeed / kDriveRadius; // Maximum angular velocity 
     public static final double kMaxAngularAcceleration = kMaxAcceleration / kDriveRadius; // Maximum angular acceleration
-    public static final double kWheelRadius = 0.0483;
+    public static final double kWheelRadius = 0.0489;
     //the number above is acurate
     public static final double kGearRatio = 6.75;
     //needs tunings
