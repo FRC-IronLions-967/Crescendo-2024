@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("TransferNoteCommand", new TransferNoteCommand());
     NamedCommands.registerCommand("MiddleNoteShot", new MoveShooterToPositionCommand(0.761));
     NamedCommands.registerCommand("MoveToTransferPositionCommand", new MoveToTransferPositionCommand());
-    NamedCommands.registerCommand("StageShot", new MoveShooterToPositionCommand(0.77));
+    NamedCommands.registerCommand("StageShot", new MoveShooterToPositionCommand(0.755));
     NamedCommands.registerCommand("SpinUpScorer", new TestRunScorer(5000));
     NamedCommands.registerCommand("AutoFireCommand", new AutoFireCommand());
     NamedCommands.registerCommand("AmpStageShot", new MoveShooterToPositionCommand(0.75));
@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     autoChooser = AutoBuilder.buildAutoChooser("Center Simple_Auto");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    ledController = new LEDController(0, 37);
+    ledController = new LEDController(0, 36);
   }
 
   /**

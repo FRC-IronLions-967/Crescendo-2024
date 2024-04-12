@@ -11,10 +11,10 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class TransferNoteCommand extends Command {
   /** Creates a new TransferNote. */
   private boolean isNote;
-  private double maxFeederSpeed;
+  private double transferFeederSpeed;
   private double intakeTransferSpeed;
   public TransferNoteCommand() {
-    maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
+    transferFeederSpeed = Values.getInstance().getDoubleValue("transferFeederSpeed");
     intakeTransferSpeed = Values.getInstance().getDoubleValue("intakeTransferSpeed");
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(SubsystemsInstance.getInstance().intakesubsystem);
@@ -32,7 +32,7 @@ public class TransferNoteCommand extends Command {
   public void execute() {
     if (isNote) {
       SubsystemsInstance.getInstance().intakesubsystem.runIntake(-intakeTransferSpeed);
-      SubsystemsInstance.getInstance().scorersubsystem.runFeeder(maxFeederSpeed);
+      SubsystemsInstance.getInstance().scorersubsystem.runFeeder(transferFeederSpeed);
     }
   }
 

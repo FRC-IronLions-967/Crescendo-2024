@@ -90,7 +90,7 @@ public void teleopInit(){
             new TestRunFeeder(0)
         );
 
-        Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToSpeakerPositionCommand());
+        Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToTransferPositionCommand());
 
         Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
         Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
@@ -103,7 +103,7 @@ public void teleopInit(){
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("A", retractNote));
         closedLoopCommands.add(new ControlSchemeOnReleasedCommand("SELECT", new ToggleControlSchemeCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("X", sourceLoad));
-        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToSpeakerPositionCommand()));
+        closedLoopCommands.add(new ControlSchemeOnReleasedCommand("X", new MoveToTransferPositionCommand()));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("E", new AdjustShooterPositionCommand(0.001)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("W", new AdjustShooterPositionCommand(-0.001)));
         closedLoopCommands.add(new ControlSchemeOnPressedCommand("Y", flail));
