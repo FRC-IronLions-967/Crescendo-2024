@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     subsystemsInst = SubsystemsInstance.getInstance();
     subsystemsInst.drivetrain.setupPathPlanner();
+    CommandScheduler.getInstance().setDefaultCommand(subsystemsInst.drivetrain, new DefaultMoveCommand());
     NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
     NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
     NamedCommands.registerCommand("RunAndExtendIntakeCommand", new AutoRunAndExtendIntakeCommand());

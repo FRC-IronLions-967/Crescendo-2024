@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Utils;
+import frc.robot.commands.DefaultMoveCommand;
 import frc.robot.lib.SdsSwerveModule;
 import frc.robot.lib.controls.XBoxController;
 
@@ -204,16 +205,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void defaultMove() {
-    
-  }
-
-  /**
-   * Get joystick values 
-   * Set motor inputs
-   */
-  @Override 
-    public void periodic(){
-      limiter = 1.0;
+    limiter = 1.0;
       if (driveController.getRightTrigger() > 0.5) {
         limiter = 0.5;
       }
@@ -242,6 +234,16 @@ public class Drivetrain extends SubsystemBase {
       if ( DriverStation.isTeleop() ) {
         drive(xSpeed, ySpeed, rot, fieldRelative);
       }
+  }
+
+  
+
+  /**
+   * Get joystick values 
+   * Set motor inputs
+   */
+  @Override 
+    public void periodic(){
       // Update the pose
       updateOdometry();
 
