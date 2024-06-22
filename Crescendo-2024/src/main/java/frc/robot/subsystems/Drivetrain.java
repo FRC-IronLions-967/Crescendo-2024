@@ -203,6 +203,10 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.changeDriveToCoast();
   }
 
+  public void defaultMove() {
+    
+  }
+
   /**
    * Get joystick values 
    * Set motor inputs

@@ -4,12 +4,18 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -39,6 +45,8 @@ public class ScorerSubsystem extends SubsystemBase {
   private boolean startScorer;
   private double speed;
 
+  private PhotonCamera aprilTagCamera;
+
   private Timer timer;
   /** Creates a new ScorerSubsystem. */
   public ScorerSubsystem() {
@@ -46,6 +54,8 @@ public class ScorerSubsystem extends SubsystemBase {
     startScorer = false;
 
     timer = new Timer();
+
+    aprilTagCamera = new PhotonCamera("April_Tag_Camera");
 
     kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
     kScorerMinPosition = Values.getInstance().getDoubleValue("kScorerMinPosition");
@@ -102,6 +112,11 @@ public class ScorerSubsystem extends SubsystemBase {
     }else {
       return false;
     }
+  }
+
+  public boolean lookForTargets() {
+    var result = aprilTagCamera.getLatestResult();
+    return result.hasTargets();
   }
 
   public void runFeeder(double speed) {
@@ -196,10 +211,18 @@ public class ScorerSubsystem extends SubsystemBase {
       }
     //}
     hasNote = feederLimit1.get();
+    var result = aprilTagCamera.getLatestResult();
+    double yaw = 0.0;
+    if (result.hasTargets()) {
+      PhotonTrackedTarget target = result.getBestTarget();
+      yaw = target.getYaw();
+    }
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Feeder Limit", hasNote);
+    SmartDashboard.putBoolean("Has Target", result.hasTargets());
+    SmartDashboard.putNumber("Yaw", yaw);
   }
 }
