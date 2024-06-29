@@ -212,10 +212,10 @@ public class ScorerSubsystem extends SubsystemBase {
     //}
     hasNote = feederLimit1.get();
     var result = aprilTagCamera.getLatestResult();
-    double yaw = 0.0;
+    double pitch = 0.0;
     if (result.hasTargets()) {
       PhotonTrackedTarget target = result.getBestTarget();
-      yaw = target.getYaw();
+      pitch = target.getPitch();
     }
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
@@ -223,6 +223,6 @@ public class ScorerSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Feeder Limit", hasNote);
     SmartDashboard.putBoolean("Has Target", result.hasTargets());
-    SmartDashboard.putNumber("Yaw", yaw);
+    SmartDashboard.putNumber("Yaw", pitch);
   }
 }
