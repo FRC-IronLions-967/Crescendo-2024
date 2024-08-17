@@ -5,10 +5,15 @@
 package frc.robot.lib;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -31,16 +36,12 @@ public class SdsSwerveModule {
   private CANSparkMax driveMotor;
   private SparkPIDController driveMotorController;
   private CANSparkMax turningMotor;
+  private SparkPIDController turningPIDController;
 
   private int driveID;
 
-  private ThriftyEncoder turningEncoder;
-
   private int i;
   // Gains are for example purposes only - must be determined for your own robot!
-  private final PIDController turningPIDController =
-       new PIDController(
-          0,0,0);
 
 
   // Gains are for example purposes only - must be determined for your own robot!
@@ -56,8 +57,7 @@ public class SdsSwerveModule {
    */
   public SdsSwerveModule(
       int driveMotorCANId,
-      int turningMotorCANId,
-      int turningEncoderAnalogPort) {
+      int turningMotorCANId) {
 
     driveMotor = new CANSparkMax(driveMotorCANId, MotorType.kBrushless);
     turningMotor = new CANSparkMax(turningMotorCANId, MotorType.kBrushless);
@@ -67,7 +67,8 @@ public class SdsSwerveModule {
     driveMotor.setIdleMode(IdleMode.kCoast);
     driveID = driveMotorCANId;
 
-    turningPIDController.setTolerance(0.02,0.0);
+    turningPIDController = turningMotor.getPIDController();
+    turningPIDController.setFeedbackDevice(turningMotor.getAbsoluteEncoder(Type.kDutyCycle));
 
     swerveTurningP = Values.getInstance().getDoubleValue("swerveTurningP");
     swerveTurningI = Values.getInstance().getDoubleValue("swerveTurningI");
@@ -80,8 +81,6 @@ public class SdsSwerveModule {
 
     //REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
     //REVPhysicsSim.getInstance().addSparkMax(turningMotor, DCMotor.getVex775Pro(1));
-
-    turningEncoder = new ThriftyEncoder(turningEncoderAnalogPort);
 
     /*
      * native units of rpm to m/s
@@ -96,12 +95,18 @@ public class SdsSwerveModule {
     driveMotorController.setD(swerveDriveMotorD);
     driveMotorController.setFF(swerveDriveMotorFF);
 
-    turningPIDController.reset();
-    turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
-    turningPIDController.setPID(
-      swerveTurningP,
-      swerveTurningI,
-      swerveTurningD);
+    if (driveID == 3 || driveID == 7) {
+      driveMotor.setInverted(true);
+    }
+
+    turningPIDController.setPositionPIDWrappingEnabled(true);
+    turningMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(2*Math.PI);
+    turningMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
+    turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+    turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+    turningPIDController.setP(swerveTurningP);
+    turningPIDController.setI(swerveTurningI);
+    turningPIDController.setD(swerveTurningD);
   }
 
 
@@ -112,7 +117,7 @@ public class SdsSwerveModule {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        driveMotor.getEncoder().getVelocity(), new Rotation2d(turningEncoder.getAbsolutePosition()));
+        driveMotor.getEncoder().getVelocity(), new Rotation2d(ConvertedTurningPosition()));
   }
 
   /**
@@ -122,7 +127,7 @@ public class SdsSwerveModule {
    */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        driveMotor.getEncoder().getPosition(), new Rotation2d(turningEncoder.getAbsolutePosition()));
+        driveMotor.getEncoder().getPosition(), new Rotation2d(ConvertedTurningPosition()));
   }
 
   public void changeDriveToBrake() {
@@ -141,16 +146,15 @@ public class SdsSwerveModule {
   public void setDesiredState(SwerveModuleState desiredState) {
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, new Rotation2d(turningEncoder.getAbsolutePosition()));
-    // Calculate the turning motor output from the turning PID controller.
-    final double turnOutput =
-      turningPIDController.calculate(turningEncoder.getAbsolutePosition(), MathUtil.angleModulus(state.angle.getRadians()));
+        SwerveModuleState.optimize(desiredState, new Rotation2d(ConvertedTurningPosition()));
+
+    double convertedPosition = MathUtil.angleModulus(state.angle.getRadians()) + Math.PI;
       
     if (i == 0) {
-      // System.out.println("Measured Angle   " + iCanId + ":   " + turningEncoder.getAbsolutePosition());
-      // System.out.println("Commanded Angle  " + iCanId + ":   " + state.angle.getRadians());
-      // System.out.println("Commanded Speed " + iCanId + ":   " + state.speedMetersPerSecond);
-      // System.out.println("Motor Speed     " + iCanId + ": " + driveMotor.getEncoder().getVelocity());
+      System.out.println("Measured Angle   " + driveID + ":   " + ConvertedTurningPosition());
+      System.out.println("Commanded Angle  " + driveID + ":   " + state.angle.getRadians());
+      System.out.println("Commanded Speed " + driveID + ":   " + state.speedMetersPerSecond);
+      System.out.println("Motor Speed     " + driveID + ": " + driveMotor.getEncoder().getVelocity());
     }
     i = (i + 1) % 100;
 
@@ -159,10 +163,15 @@ public class SdsSwerveModule {
     // SmartDashboard.putNumber("Commanded Angle" + driveID, state.angle.getRadians());
 
     driveMotorController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
+    turningPIDController.setReference(convertedPosition, ControlType.kPosition);
     //if (turnOutput > 0.5 ) {
-      turningMotor.setVoltage(turnOutput);
+    //  turningMotor.setVoltage(turnOutput);
     //} else {
     //  turningMotor.setVoltage(0);
     //}
+  }
+
+  private double ConvertedTurningPosition() {
+    return turningMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition() - Math.PI;
   }
 }
