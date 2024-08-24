@@ -43,10 +43,10 @@ public class Drivetrain extends SubsystemBase {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(10);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(10);
 
-  private final SdsSwerveModule m_frontLeft = new SdsSwerveModule(5, 6, 2);
-  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4, 1);
-  private final SdsSwerveModule m_backLeft = new SdsSwerveModule(7, 8, 3);
-  private final SdsSwerveModule m_backRight = new SdsSwerveModule(1, 2, 0);
+  private final SdsSwerveModule m_frontLeft = new SdsSwerveModule(5, 6);
+  private final SdsSwerveModule m_backLeft = new SdsSwerveModule(7, 8);
+  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4);
+  private final SdsSwerveModule m_backRight = new SdsSwerveModule(1, 2);
   private XBoxController driveController;
 //first two colums above are done
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
