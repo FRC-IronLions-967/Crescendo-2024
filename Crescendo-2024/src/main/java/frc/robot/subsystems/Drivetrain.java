@@ -43,8 +43,8 @@ public class Drivetrain extends SubsystemBase {
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(10);
 
   private final SdsSwerveModule m_frontLeft = new SdsSwerveModule(5, 6);
-  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4);
   private final SdsSwerveModule m_backLeft = new SdsSwerveModule(7, 8);
+  private final SdsSwerveModule m_frontRight = new SdsSwerveModule(3, 4);
   private final SdsSwerveModule m_backRight = new SdsSwerveModule(1, 2);
   private XBoxController driveController;
 //first two colums above are done

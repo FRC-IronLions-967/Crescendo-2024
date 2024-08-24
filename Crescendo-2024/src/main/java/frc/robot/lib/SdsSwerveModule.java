@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
@@ -39,6 +40,7 @@ public class SdsSwerveModule {
   private SparkPIDController turningPIDController;
 
   private int driveID;
+  private int turnID;
 
   private int i;
   // Gains are for example purposes only - must be determined for your own robot!
@@ -66,6 +68,7 @@ public class SdsSwerveModule {
     driveMotor.setSecondaryCurrentLimit(80);
     driveMotor.setIdleMode(IdleMode.kCoast);
     driveID = driveMotorCANId;
+    turnID = turningMotorCANId;
 
     turningPIDController = turningMotor.getPIDController();
     turningPIDController.setFeedbackDevice(turningMotor.getAbsoluteEncoder(Type.kDutyCycle));
@@ -95,10 +98,6 @@ public class SdsSwerveModule {
     driveMotorController.setD(swerveDriveMotorD);
     driveMotorController.setFF(swerveDriveMotorFF);
 
-    if (driveID == 3 || driveID == 7) {
-      driveMotor.setInverted(true);
-    }
-
     turningPIDController.setPositionPIDWrappingEnabled(true);
     turningMotor.getAbsoluteEncoder(Type.kDutyCycle).setPositionConversionFactor(2*Math.PI);
     turningMotor.getAbsoluteEncoder(Type.kDutyCycle).setInverted(true);
@@ -107,6 +106,12 @@ public class SdsSwerveModule {
     turningPIDController.setP(swerveTurningP);
     turningPIDController.setI(swerveTurningI);
     turningPIDController.setD(swerveTurningD);
+
+    if (turnID == 4) {
+      driveMotor.setInverted(true);
+    } else {
+      driveMotor.setInverted(false);
+    }
   }
 
 
@@ -155,6 +160,7 @@ public class SdsSwerveModule {
       System.out.println("Commanded Angle  " + driveID + ":   " + state.angle.getRadians());
       System.out.println("Commanded Speed " + driveID + ":   " + state.speedMetersPerSecond);
       System.out.println("Motor Speed     " + driveID + ": " + driveMotor.getEncoder().getVelocity());
+      SmartDashboard.putNumber("Swerve Angle " + turnID, state.angle.getRadians());
     }
     i = (i + 1) % 100;
 
@@ -174,4 +180,5 @@ public class SdsSwerveModule {
   private double ConvertedTurningPosition() {
     return turningMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition() - Math.PI;
   }
+
 }
