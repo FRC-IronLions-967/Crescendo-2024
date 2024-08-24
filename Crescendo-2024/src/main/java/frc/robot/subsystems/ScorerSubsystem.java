@@ -132,10 +132,18 @@ public class ScorerSubsystem extends SubsystemBase {
     pivotMotorPID.setReference(pivotPosition, ControlType.kPosition);
   }
 
+  /**
+   * 
+   * @return
+   */
   public boolean isNoteIn() {
     return hasNote;
   }
 
+  /**
+   * 
+   * @param speed
+   */
   public void moveFlyWheel(double speed) {
     scorerMotorPID.setReference(speed, ControlType.kVelocity);
     state = ScorerStates.AUTONOMOUS;
