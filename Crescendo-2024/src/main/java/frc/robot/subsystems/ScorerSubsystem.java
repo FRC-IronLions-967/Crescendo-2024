@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import java.util.List;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -44,6 +46,8 @@ public class ScorerSubsystem extends SubsystemBase {
   private ScorerStates state;
   private boolean startScorer;
   private double speed;
+
+  double pitch;
 
   private PhotonCamera aprilTagCamera;
 
@@ -155,6 +159,21 @@ public class ScorerSubsystem extends SubsystemBase {
     return hasNote;
   }
 
+  public double getScorerPositionBasedOnPitch(double pitch) {
+    if (pitch > 12) {
+      return 0.82;
+    } else if (pitch > 8.5) {
+     return 0.793;
+    } else if (pitch > 0.0) {
+     return 0.785;
+    } else if (pitch > -1.8) {
+     return 0.77;
+    }
+    else {
+      return Values.getInstance().getDoubleValue("kScorerMaxPosition");
+    }
+  }
+
   /**
    * 
    * @param speed
@@ -162,6 +181,10 @@ public class ScorerSubsystem extends SubsystemBase {
   public void moveFlyWheel(double speed) {
     scorerMotorPID.setReference(speed, ControlType.kVelocity);
     state = ScorerStates.AUTONOMOUS;
+  }
+
+  public double getPitch() {
+    return pitch;
   }
 
   @Override
@@ -212,10 +235,17 @@ public class ScorerSubsystem extends SubsystemBase {
     //}
     hasNote = feederLimit1.get();
     var result = aprilTagCamera.getLatestResult();
-    double pitch = 0.0;
+    pitch = 0.0;
     if (result.hasTargets()) {
-      PhotonTrackedTarget target = result.getBestTarget();
-      pitch = target.getPitch();
+      List<PhotonTrackedTarget> targets = result.getTargets();
+      PhotonTrackedTarget aimTarget = result.getBestTarget();
+      for (java.util.Iterator<PhotonTrackedTarget> iter = targets.iterator(); iter.hasNext(); ) {
+        aimTarget = iter.next();
+        if (aimTarget.getFiducialId() == 8 || aimTarget.getFiducialId() == 4){
+          break;
+        }
+      }
+      pitch = aimTarget.getPitch();
     }
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
