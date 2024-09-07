@@ -155,14 +155,14 @@ public class SdsSwerveModule {
 
     double convertedPosition = MathUtil.angleModulus(state.angle.getRadians()) + Math.PI;
       
-    if (i == 0) {
-      System.out.println("Measured Angle   " + driveID + ":   " + ConvertedTurningPosition());
-      System.out.println("Commanded Angle  " + driveID + ":   " + state.angle.getRadians());
-      System.out.println("Commanded Speed " + driveID + ":   " + state.speedMetersPerSecond);
-      System.out.println("Motor Speed     " + driveID + ": " + driveMotor.getEncoder().getVelocity());
-      SmartDashboard.putNumber("Swerve Angle " + turnID, state.angle.getRadians());
-    }
-    i = (i + 1) % 100;
+    // if (i == 0) {
+    //   System.out.println("Measured Angle   " + driveID + ":   " + ConvertedTurningPosition());
+    //   System.out.println("Commanded Angle  " + driveID + ":   " + state.angle.getRadians());
+    //   System.out.println("Commanded Speed " + driveID + ":   " + state.speedMetersPerSecond);
+    //   System.out.println("Motor Speed     " + driveID + ": " + driveMotor.getEncoder().getVelocity());
+    //   SmartDashboard.putNumber("Swerve Angle " + turnID, state.angle.getRadians());
+    // }
+    // i = (i + 1) % 100;
 
     // SmartDashboard.putNumber("Drive RPM" + driveID, driveMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Module Angle" + driveID,turningEncoder.getAbsolutePosition());

@@ -17,7 +17,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -47,19 +47,16 @@ public class ScorerSubsystem extends SubsystemBase {
   private boolean startScorer;
   private double speed;
 
-  double pitch;
-
-  private PhotonCamera aprilTagCamera;
-
   private Timer timer;
+  public boolean automaticShooting;
+
   /** Creates a new ScorerSubsystem. */
   public ScorerSubsystem() {
     state = ScorerStates.IDLE;
     startScorer = false;
+    automaticShooting = false;
 
     timer = new Timer();
-
-    aprilTagCamera = new PhotonCamera("April_Tag_Camera");
 
     kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
     kScorerMinPosition = Values.getInstance().getDoubleValue("kScorerMinPosition");
@@ -103,10 +100,10 @@ public class ScorerSubsystem extends SubsystemBase {
   }
 
   public void runScorer(double speed) {
-    state = ScorerStates.IDLE;
-    this.speed = speed;
     if (!startScorer) {
       startScorer = true;
+      state = ScorerStates.IDLE;
+      this.speed = speed;
     }
   }
 
@@ -116,11 +113,6 @@ public class ScorerSubsystem extends SubsystemBase {
     }else {
       return false;
     }
-  }
-
-  public boolean lookForTargets() {
-    var result = aprilTagCamera.getLatestResult();
-    return result.hasTargets();
   }
 
   public void runFeeder(double speed) {
@@ -142,6 +134,10 @@ public class ScorerSubsystem extends SubsystemBase {
     return pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition();
   }
 
+  public boolean isInPosition() {
+    return Math.abs(pivotPosition - getScorerPosition()) < 0.5;
+  }
+
   public void adjustShooter(double delta) {
     pivotPosition += delta; 
 
@@ -159,21 +155,6 @@ public class ScorerSubsystem extends SubsystemBase {
     return hasNote;
   }
 
-  public double getScorerPositionBasedOnPitch(double pitch) {
-    if (pitch > 12) {
-      return 0.82;
-    } else if (pitch > 8.5) {
-     return 0.793;
-    } else if (pitch > 0.0) {
-     return 0.785;
-    } else if (pitch > -1.8) {
-     return 0.77;
-    }
-    else {
-      return Values.getInstance().getDoubleValue("kScorerMaxPosition");
-    }
-  }
-
   /**
    * 
    * @param speed
@@ -181,10 +162,6 @@ public class ScorerSubsystem extends SubsystemBase {
   public void moveFlyWheel(double speed) {
     scorerMotorPID.setReference(speed, ControlType.kVelocity);
     state = ScorerStates.AUTONOMOUS;
-  }
-
-  public double getPitch() {
-    return pitch;
   }
 
   @Override
@@ -203,13 +180,13 @@ public class ScorerSubsystem extends SubsystemBase {
         case RAMP_UP:
         SmartDashboard.putString("scorerstate", "RAMP_UP");
         scorerMotorPID.setReference(speed, ControlType.kVelocity);
-          if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+          if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
               speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-              IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
-              (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
-              speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-              DriverStation.isAutonomousEnabled()))
+              ((IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
+              DriverStation.isAutonomousEnabled() ||
+              automaticShooting)) {
             state = ScorerStates.SHOOT;
+              }
           break;
         case SHOOT:
         SmartDashboard.putString("scorerstate", "SHOOT");
@@ -234,25 +211,10 @@ public class ScorerSubsystem extends SubsystemBase {
       }
     //}
     hasNote = feederLimit1.get();
-    var result = aprilTagCamera.getLatestResult();
-    pitch = 0.0;
-    if (result.hasTargets()) {
-      List<PhotonTrackedTarget> targets = result.getTargets();
-      PhotonTrackedTarget aimTarget = result.getBestTarget();
-      for (java.util.Iterator<PhotonTrackedTarget> iter = targets.iterator(); iter.hasNext(); ) {
-        aimTarget = iter.next();
-        if (aimTarget.getFiducialId() == 8 || aimTarget.getFiducialId() == 4){
-          break;
-        }
-      }
-      pitch = aimTarget.getPitch();
-    }
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
-    // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Feeder Limit", hasNote);
-    SmartDashboard.putBoolean("Has Target", result.hasTargets());
-    SmartDashboard.putNumber("Yaw", pitch);
   }
 }

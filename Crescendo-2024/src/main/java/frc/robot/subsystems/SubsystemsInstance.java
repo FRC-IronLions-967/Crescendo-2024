@@ -8,6 +8,7 @@ public class SubsystemsInstance {
     public Drivetrain drivetrain;
     public IntakeSubsystem intakesubsystem;
     public ScorerSubsystem scorersubsystem;
+    public VisionSubsystem visionSubsystem;
    
     private static SubsystemsInstance inst;
 
@@ -15,6 +16,7 @@ public class SubsystemsInstance {
         drivetrain = new Drivetrain();
         intakesubsystem = new IntakeSubsystem();
         scorersubsystem = new ScorerSubsystem();
+        visionSubsystem = new VisionSubsystem();
 
         
         
