@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Utils;
-import frc.robot.commands.DefaultMoveCommand;
 import frc.robot.lib.SdsSwerveModule;
 import frc.robot.lib.controls.XBoxController;
 
@@ -90,11 +89,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Method to drive the robot using joystick info.
+   * Generic method to drive the robot using speed inputs
    *
-   * @param xSpeed Speed of the robot in the x direction (forward).
-   * @param ySpeed Speed of the robot in the y direction (sideways).
-   * @param rot Angular rate of the robot.
+   * @param xSpeed m/s speed of the robot in the x direction (forward).
+   * @param ySpeed m/s speed of the robot in the y direction (sideways).
+   * @param rot rad/sec angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
@@ -204,6 +203,9 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.changeDriveToCoast();
   }
 
+  /**
+   * Standard Teleop driving
+   */
   public void defaultMove() {
     limiter = 1.0;
       if (driveController.getRightTrigger() > 0.5) {
@@ -233,6 +235,33 @@ public class Drivetrain extends SubsystemBase {
 
       if ( DriverStation.isTeleop() ) {
         drive(xSpeed, ySpeed, rot, fieldRelative);
+      }
+  }
+
+  /**
+   * Drive the robot using sensor inputs for the rotation and driver input translation.
+   * @param rotation rot/sec
+   */
+  public void lockonMove(double rotation) {
+    limiter = 1.0;
+      if (driveController.getRightTrigger() > 0.5) {
+        limiter = 0.5;
+      }
+      // Get the x speed. We are inverting this because Xbox controllers return
+      // negative values when we push forward.
+      final var xSpeed = limiter * m_xspeedLimiter.calculate(
+      Utils.squarePreserveSign(-MathUtil.applyDeadband(driveController.getLeftStickY(), 0.1))
+          * Constants.kMaxSpeed);
+
+      // Get the y speed or sideways/strafe speed. We are inverting this because
+      // we want a positive value when we pull to the left. Xbox controllers
+      // return positive values when you pull to the right by default.
+      final var ySpeed = limiter * m_yspeedLimiter.calculate(
+          Utils.squarePreserveSign(MathUtil.applyDeadband(-driveController.getLeftStickX(), 0.1))
+              * Constants.kMaxSpeed);
+
+      if ( DriverStation.isTeleop() ) {
+        drive(xSpeed, ySpeed, rotation, fieldRelative);
       }
   }
 

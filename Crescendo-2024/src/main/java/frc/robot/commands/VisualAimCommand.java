@@ -12,13 +12,11 @@ import frc.robot.subsystems.SubsystemsInstance;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class VisualAimCommand extends Command {
-  private double pitch;
-  private double yaw;
-  private double tolerance;
 
   private VisionSubsystem visionSubsystem;
   private ScorerSubsystem scorerSubsystem;
   private Drivetrain drivetrain;
+  
   /** Creates a new VisualAimCommand. */
   public VisualAimCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +28,6 @@ public class VisualAimCommand extends Command {
     addRequirements(scorerSubsystem);
     addRequirements(drivetrain);
     addRequirements(visionSubsystem);
-    tolerance = Values.getInstance().getDoubleValue("intakePositionTolerance");
 
   }
 
@@ -45,7 +42,7 @@ public class VisualAimCommand extends Command {
   public void execute() {
     
     scorerSubsystem.moveShooter(visionSubsystem.getScorerPositionBasedOnPitch());
-    drivetrain.drive(0, 0, -0.1 * visionSubsystem.getYaw(), false);
+    drivetrain.lockonMove(visionSubsystem.getSpeakerYaw());
     if(visionSubsystem.isAimed() && scorerSubsystem.isInPosition()) {
       scorerSubsystem.runScorer(Values.getInstance().getDoubleValue("shooterMaxSpeed"));
     }
@@ -60,6 +57,6 @@ public class VisualAimCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !scorerSubsystem.isNoteIn() || !visionSubsystem.lookForTargets();
+    return !scorerSubsystem.isNoteIn() || !visionSubsystem.hasShotTarget();
   }
 }

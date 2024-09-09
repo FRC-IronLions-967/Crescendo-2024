@@ -38,65 +38,65 @@ public static IO getInstance() {
 }
 
 public void teleopInit(){
-//put commands here
-        Command intakeNote = new SequentialCommandGroup(
-            new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
-            new RetractIntakeCommand(),
-            new TransferNoteCommand(),
-            new MoveToTransferPositionCommand()
-        );
+    //put commands here
+    Command intakeNote = new SequentialCommandGroup(
+        new ParallelCommandGroup(new RunAndExtendIntakeCommand(), new MoveToTransferPositionCommand()),
+        new RetractIntakeCommand(),
+        new TransferNoteCommand(),
+        new MoveToTransferPositionCommand()
+    );
 
-        Command retractNote = new SequentialCommandGroup(
-            new ParallelCommandGroup(new RetractIntakeCommand(), new MoveToTransferPositionCommand()),
-            new TransferNoteCommand()
-        );
+    Command retractNote = new SequentialCommandGroup(
+        new ParallelCommandGroup(new RetractIntakeCommand(), new MoveToTransferPositionCommand()),
+        new TransferNoteCommand()
+    );
 
-        Command ampIntake = new SequentialCommandGroup(
-            new MoveIntakeToUnJamPositionCommand(),
-            new RunIntakeOutCommand()
-        );
+    Command ampIntake = new SequentialCommandGroup(
+        new MoveIntakeToUnJamPositionCommand(),
+        new RunIntakeOutCommand()
+    );
 
-        Command flail = new ParallelCommandGroup(
-            // new ExtendIntakeCommand(),
-            new MoveIntakeToUnJamPositionCommand(),
-            new MoveToAmpPositionCommand(),
-            new TestRunScorer(1000),
-            new TestRunIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed")),
-            new TestRunFeeder(maxFeederSpeed)
-        );
+    Command flail = new ParallelCommandGroup(
+        // new ExtendIntakeCommand(),
+        new MoveIntakeToUnJamPositionCommand(),
+        new MoveToAmpPositionCommand(),
+        new TestRunScorer(1000),
+        new TestRunIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed")),
+        new TestRunFeeder(maxFeederSpeed)
+    );
 
-        Command unFlail = new ParallelCommandGroup(
-            new RetractIntakeCommand(),
-            new MoveToTransferPositionCommand(),
-            new TestRunScorer(0),
-            new TestRunIntake(0),
-            new TestRunFeeder(0)
-        );
+    Command unFlail = new ParallelCommandGroup(
+        new RetractIntakeCommand(),
+        new MoveToTransferPositionCommand(),
+        new TestRunScorer(0),
+        new TestRunIntake(0),
+        new TestRunFeeder(0)
+    );
 
-        Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToTransferPositionCommand());
+    Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToTransferPositionCommand());
 
-        Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
-        Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
+    Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
+    Command handOver = new ParallelCommandGroup(new TestRunFeeder(0), new TestRunIntake(0));
 
-        manipulatorController.whenButtonPressed("B", new RunScorerCommand());
-        manipulatorController.whenButtonPressed("LBUMP", new TestMoveScorer(kScorerMaxPosition));
-        manipulatorController.whenButtonPressed("RBUMP", new TestMoveScorer(ampPosition));
-        manipulatorController.whenButtonPressed("A", intakeNote);
-        manipulatorController.whenButtonReleased("A", retractNote);
-        manipulatorController.whenButtonPressed("X", sourceLoad);
-        manipulatorController.whenButtonReleased("X", new MoveToTransferPositionCommand());
-        // manipulatorController.whenPOVButtonPressed("E", new VisualAimCommand()));
-        // manipulatorController.whenPOVButtonPressed("E", new AdjustShooterPositionCommand(0.01)));
-        // manipulatorController.whenPOVButtonPressed("W", new AdjustShooterPositionCommand(-0.01)));
-        manipulatorController.whenButtonPressed("Y", flail);
-        manipulatorController.whenButtonReleased("Y", unFlail);
-        manipulatorController.whenPOVButtonPressed("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("speakerPosition")));
-        manipulatorController.whenPOVButtonPressed("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot")));
-        // manipulatorController.whenButtonPressed("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
+    manipulatorController.whenButtonPressed("B", new RunScorerCommand());
+    manipulatorController.whenButtonPressed("LBUMP", new TestMoveScorer(kScorerMaxPosition));
+    manipulatorController.whenButtonPressed("RBUMP", new TestMoveScorer(ampPosition));
+    manipulatorController.whenButtonPressed("A", intakeNote);
+    manipulatorController.whenButtonReleased("A", retractNote);
+    manipulatorController.whenButtonPressed("X", sourceLoad);
+    manipulatorController.whenButtonReleased("X", new MoveToTransferPositionCommand());
+    // manipulatorController.whenPOVButtonPressed("E", new VisualAimCommand()));
+    // manipulatorController.whenPOVButtonPressed("E", new AdjustShooterPositionCommand(0.01)));
+    // manipulatorController.whenPOVButtonPressed("W", new AdjustShooterPositionCommand(-0.01)));
+    manipulatorController.whenButtonPressed("Y", flail);
+    manipulatorController.whenButtonReleased("Y", unFlail);
+    manipulatorController.whenPOVButtonPressed("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("speakerPosition")));
+    manipulatorController.whenPOVButtonPressed("N", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterLongShot")));
+    // manipulatorController.whenButtonPressed("S", new MoveShooterToPositionCommand(Values.getInstance().getDoubleValue("shooterWingShot"))));
 
-        driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
-        driverController.whenButtonPressed("Y", new ResetGyro());
-        driverController.whenButtonPressed("RBUMP", new VisualAimCommand());
+    driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
+    driverController.whenButtonPressed("Y", new ResetGyro());
+    driverController.whenButtonPressed("RBUMP", new VisualAimCommand());
 }
 public XBoxController getDriverController(){
     return driverController;
