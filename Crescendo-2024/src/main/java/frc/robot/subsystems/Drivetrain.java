@@ -261,7 +261,7 @@ public class Drivetrain extends SubsystemBase {
               * Constants.kMaxSpeed);
 
       if ( DriverStation.isTeleop() ) {
-        drive(xSpeed, ySpeed, rotation, fieldRelative);
+        drive(xSpeed, ySpeed, -0.1 * rotation, fieldRelative);
       }
   }
 

@@ -38,8 +38,8 @@ public class VisionSubsystem extends SubsystemBase {
   static { //pitch, angle
     speakerLookup.put(12.0,0.82);
     speakerLookup.put(8.5,0.793);
-    speakerLookup.put(0.0, 0.785);
-    speakerLookup.put(-1.8,0.77);
+    speakerLookup.put(0.0, 0.755);
+    speakerLookup.put(-1.8,0.73);
   }
   
 
