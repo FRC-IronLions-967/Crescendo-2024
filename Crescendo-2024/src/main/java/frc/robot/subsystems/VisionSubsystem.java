@@ -67,6 +67,7 @@ public class VisionSubsystem extends SubsystemBase {
     return speakerAimTargetValid && Math.abs(speakerAimTarget.getYaw()) < 0.5;
   }
 
+
   /**
    * Computes shooter angle based on the speaker april tag location
    * @return PID reference point for the current target
@@ -139,8 +140,8 @@ public class VisionSubsystem extends SubsystemBase {
     getSpeakerTarget();
     
     if(speakerAimTargetValid) {
-      SmartDashboard.putNumber("Pitch", speakerAimTarget.getPitch());
-      SmartDashboard.putNumber("Yaw", speakerAimTarget.getYaw());
+    //   SmartDashboard.putNumber("Pitch", speakerAimTarget.getPitch());
+    //   SmartDashboard.putNumber("Yaw", speakerAimTarget.getYaw());
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
   }

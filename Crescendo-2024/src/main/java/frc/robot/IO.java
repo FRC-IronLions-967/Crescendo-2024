@@ -61,7 +61,7 @@ public void teleopInit(){
         new MoveIntakeToUnJamPositionCommand(),
         new MoveToAmpPositionCommand(),
         new TestRunScorer(1000),
-        new TestRunIntake(Values.getInstance().getDoubleValue("intakeMaxSpeed")),
+        new TestRunIntake(-4000),
         new TestRunFeeder(maxFeederSpeed)
     );
 
@@ -97,6 +97,7 @@ public void teleopInit(){
     driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
     driverController.whenButtonPressed("Y", new ResetGyro());
     driverController.whenButtonPressed("RBUMP", new VisualAimCommand());
+    driverController.whenButtonReleased("RBUMP", new DefaultMoveCommand());
 }
 public XBoxController getDriverController(){
     return driverController;

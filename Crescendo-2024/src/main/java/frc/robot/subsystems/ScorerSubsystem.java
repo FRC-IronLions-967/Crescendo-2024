@@ -115,6 +115,11 @@ public class ScorerSubsystem extends SubsystemBase {
     }
   }
 
+  public void stopScorer() {
+    startScorer = false;
+    state = ScorerStates.IDLE;
+  }
+
   public void runFeeder(double speed) {
     if(speed < -kMaxNEOSpeed) speed = -kMaxNEOSpeed;
     if(speed > kMaxNEOSpeed) speed = kMaxNEOSpeed;
@@ -212,7 +217,7 @@ public class ScorerSubsystem extends SubsystemBase {
     //}
     hasNote = feederLimit1.get();
     SmartDashboard.putNumber("Shooter Angle", pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
-    SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Shooter Speed", scorerMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Feeder Speed", feederMotor.getEncoder().getVelocity());
     // SmartDashboard.putNumber("Pivot Output", pivotMotor.getAppliedOutput());
     SmartDashboard.putBoolean("Feeder Limit", hasNote);

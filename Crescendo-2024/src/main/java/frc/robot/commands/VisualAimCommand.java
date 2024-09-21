@@ -52,6 +52,8 @@ public class VisualAimCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     scorerSubsystem.automaticShooting = false;
+    scorerSubsystem.moveShooter(Values.getInstance().getDoubleValue("kScorerMaxPosition"));
+    scorerSubsystem.stopScorer();
   }
 
   // Returns true when the command should end.
