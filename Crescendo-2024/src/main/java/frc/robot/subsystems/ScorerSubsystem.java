@@ -4,12 +4,20 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -40,10 +48,13 @@ public class ScorerSubsystem extends SubsystemBase {
   private double speed;
 
   private Timer timer;
+  public boolean automaticShooting;
+
   /** Creates a new ScorerSubsystem. */
   public ScorerSubsystem() {
     state = ScorerStates.IDLE;
     startScorer = false;
+    automaticShooting = false;
 
     timer = new Timer();
 
@@ -89,10 +100,10 @@ public class ScorerSubsystem extends SubsystemBase {
   }
 
   public void runScorer(double speed) {
-    state = ScorerStates.IDLE;
-    this.speed = speed;
     if (!startScorer) {
       startScorer = true;
+      state = ScorerStates.IDLE;
+      this.speed = speed;
     }
   }
 
@@ -102,6 +113,11 @@ public class ScorerSubsystem extends SubsystemBase {
     }else {
       return false;
     }
+  }
+
+  public void stopScorer() {
+    startScorer = false;
+    state = ScorerStates.IDLE;
   }
 
   public void runFeeder(double speed) {
@@ -121,6 +137,10 @@ public class ScorerSubsystem extends SubsystemBase {
 
   public double getScorerPosition() {
     return pivotMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition();
+  }
+
+  public boolean isInPosition() {
+    return Math.abs(pivotPosition - getScorerPosition()) < 0.5;
   }
 
   public void adjustShooter(double delta) {
@@ -165,13 +185,13 @@ public class ScorerSubsystem extends SubsystemBase {
         case RAMP_UP:
         SmartDashboard.putString("scorerstate", "RAMP_UP");
         scorerMotorPID.setReference(speed, ControlType.kVelocity);
-          if ((speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
+          if (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
               speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-              IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
-              (speed - speedTolerance <= scorerMotor.getEncoder().getVelocity() && 
-              speed + speedTolerance >= scorerMotor.getEncoder().getVelocity() && 
-              DriverStation.isAutonomousEnabled()))
+              ((IO.getInstance().getManipulatorController().getLeftTrigger() > 0.5) ||
+              DriverStation.isAutonomousEnabled() ||
+              automaticShooting)) {
             state = ScorerStates.SHOOT;
+              }
           break;
         case SHOOT:
         SmartDashboard.putString("scorerstate", "SHOOT");

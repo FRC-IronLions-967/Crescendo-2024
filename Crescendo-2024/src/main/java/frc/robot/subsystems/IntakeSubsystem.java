@@ -96,6 +96,6 @@ public class IntakeSubsystem extends SubsystemBase {
     hasNote = isNoteIn.get();
     // SmartDashboard.putNumber("Intake Speed", intakeMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Intake Angle", getIntakePosition());
-    SmartDashboard.putBoolean("Limit Switch", hasNote);
+    SmartDashboard.putBoolean("Intake Limit", hasNote);
   }
 }

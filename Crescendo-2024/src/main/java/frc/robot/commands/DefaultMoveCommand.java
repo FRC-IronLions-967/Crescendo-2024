@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.IO;
+import frc.robot.subsystems.SubsystemsInstance;
 
-public class ToggleControlSchemeCommand extends Command {
-  /** Creates a new ToggleCommandSchemeCommand. */
-  public ToggleControlSchemeCommand() {
-
+public class DefaultMoveCommand extends Command {
+  /** Creates a new DefaultMoveCommand. */
+  public DefaultMoveCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(SubsystemsInstance.getInstance().drivetrain);
   }
 
   // Called when the command is initially scheduled.
@@ -21,7 +21,7 @@ public class ToggleControlSchemeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    IO.getInstance().switchControlScheme();
+    SubsystemsInstance.getInstance().drivetrain.defaultMove();
   }
 
   // Called once the command ends or is interrupted.

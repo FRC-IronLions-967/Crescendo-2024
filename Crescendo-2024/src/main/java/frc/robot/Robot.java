@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     subsystemsInst = SubsystemsInstance.getInstance();
     subsystemsInst.drivetrain.setupPathPlanner();
+    CommandScheduler.getInstance().setDefaultCommand(subsystemsInst.drivetrain, new DefaultMoveCommand());
     NamedCommands.registerCommand("MoveToSpeakerPositionCommand", new MoveToSpeakerPositionCommand());
     NamedCommands.registerCommand("RunScorerCommand", new RunScorerCommand());
     NamedCommands.registerCommand("RunAndExtendIntakeCommand", new AutoRunAndExtendIntakeCommand());
@@ -61,7 +62,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    SmartDashboard.putBoolean("Manual Mode", IO.getInstance().isManualMode());
     ledController.heartbeat();
   }
 

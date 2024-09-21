@@ -1,7 +1,6 @@
 package frc.robot.lib.controls;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -11,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
-public class XBoxController extends Joystick implements ControlSchemeVisitor {
+public class XBoxController extends Joystick {
     public static final int LEFT_X_AXIS = 0;
     public static final int LEFT_Y_AXIS = 1;
     public static final int LEFT_TRIGGER = 2;
@@ -22,10 +21,8 @@ public class XBoxController extends Joystick implements ControlSchemeVisitor {
     //this controls how far you have to press the trigger for it to register as pressed
     private double triggerTolerance = 0.25;
 
-    private HashMap<String, CustomTrigger> buttonMap;
-    private HashMap<String, CustomTrigger> povMap;
-
-    private ControlScheme controlScheme;
+    private HashMap<String, Trigger> buttonMap;
+    private HashMap<String, Trigger> povMap;
 
     public XBoxController(int id) {
         super(id);
@@ -33,85 +30,39 @@ public class XBoxController extends Joystick implements ControlSchemeVisitor {
         povMap = new HashMap<>();
 
         //initialize the buttons on the controller
-        buttonMap.put("A", new CustomJoystickButton(this, 1));
-        buttonMap.put("B", new CustomJoystickButton(this, 2));
-        buttonMap.put("X", new CustomJoystickButton(this, 3));
-        buttonMap.put("Y", new CustomJoystickButton(this, 4));
-        buttonMap.put("LBUMP", new CustomJoystickButton(this, 5));
-        buttonMap.put("RBUMP", new CustomJoystickButton(this, 6));
-        buttonMap.put("SELECT", new CustomJoystickButton(this, 7));
-        buttonMap.put("START", new CustomJoystickButton(this, 8));
-        buttonMap.put("LTRIG", new CustomTrigger(this::isLeftTriggerPressed));
-        buttonMap.put("RTRIG", new CustomTrigger(this::isRightTriggerPressed));
+        buttonMap.put("A", new JoystickButton(this, 1));
+        buttonMap.put("B", new JoystickButton(this, 2));
+        buttonMap.put("X", new JoystickButton(this, 3));
+        buttonMap.put("Y", new JoystickButton(this, 4));
+        buttonMap.put("LBUMP", new JoystickButton(this, 5));
+        buttonMap.put("RBUMP", new JoystickButton(this, 6));
+        buttonMap.put("SELECT", new JoystickButton(this, 7));
+        buttonMap.put("START", new JoystickButton(this, 8));
+        buttonMap.put("LTRIG", new Trigger(this::isLeftTriggerPressed));
+        buttonMap.put("RTRIG", new Trigger(this::isRightTriggerPressed));
 
         for(int i = 1; i <= 8; i++) {
-            Trigger button = new JoystickButton(this, i);
+            JoystickButton button = new JoystickButton(this, i);
             button.onTrue(new DoNothingCommand());
             button.onFalse(new DoNothingCommand());
         }
 
         //initialize the POV buttons (the buttons on the dpad of the controller)
         //these constructor calls could be modified to take a 3rd argument that is their "POV value", which returns from another wpilib function, which I'm not using
-        povMap.put("N", new CustomPOVButton(this, 0));
-        povMap.put("NE", new CustomPOVButton(this, 45));
-        povMap.put("E", new CustomPOVButton(this, 90));
-        povMap.put("SE", new CustomPOVButton(this, 135));
-        povMap.put("S", new CustomPOVButton(this, 180));
-        povMap.put("SW", new CustomPOVButton(this, 225));
-        povMap.put("W", new CustomPOVButton(this, 270));
-        povMap.put("NW", new CustomPOVButton(this, 315));
+        povMap.put("N", new POVButton(this, 0));
+        povMap.put("NE", new POVButton(this, 45));
+        povMap.put("E", new POVButton(this, 90));
+        povMap.put("SE", new POVButton(this, 135));
+        povMap.put("S", new POVButton(this, 180));
+        povMap.put("SW", new POVButton(this, 225));
+        povMap.put("W", new POVButton(this, 270));
+        povMap.put("NW", new POVButton(this, 315));
 
         for(int i = 0; i <= 315; i += 45) {
-            Trigger button = new POVButton(this, i);
+            POVButton button = new POVButton(this, i);
             button.onTrue(new DoNothingCommand());
             button.onFalse(new DoNothingCommand());
         }
-    }
-
-    public XBoxController(int id, ControlScheme controlScheme) {
-        super(id);
-        
-        setControlScheme(controlScheme);
-    }
-
-    public void setControlScheme(ControlScheme controlScheme) {
-        this.controlScheme = controlScheme;
-
-        // clear out the current command mapping
-        // for(Entry<String, Trigger> e : buttonMap.entrySet()) {
-        //     e.getValue().onTrue(new DoNothingCommand());
-        //     e.getValue().onFalse(new DoNothingCommand());
-        // }
-        Set<String> buttons = buttonMap.keySet();
-        for(String b : buttons) {
-            // System.out.println("Setting " + b + " to DoNothing");
-            buttonMap.get(b).clear();
-            buttonMap.get(b).onTrue(new DoNothingCommand());
-            buttonMap.get(b).onFalse(new DoNothingCommand());
-        }
-
-        // for(Entry<String, Trigger> e : povMap.entrySet()) {
-        //     e.getValue().onTrue(new DoNothingCommand());
-        //     e.getValue().onFalse(new DoNothingCommand());
-        // }
-
-        Set<String> povButtons = povMap.keySet();
-        for(String b : povButtons) {
-            // System.out.println("Setting " + b + " to DoNothing");
-            povMap.get(b).clear();
-            povMap.get(b).onTrue(new DoNothingCommand());
-            povMap.get(b).onFalse(new DoNothingCommand());
-        }
-
-        // assign all of the commands in the control scheme to buttons
-        for(ControlSchemeCommand c : controlScheme.getControlSchemeCommands()) {
-            // System.out.println("Setting " + c.getButton() + " to new Command");
-            c.accept(this);
-        }
-    }
-
-    public ControlScheme getControlScheme() {
-        return controlScheme;
     }
 
     //assigns commands to buttons
@@ -188,28 +139,6 @@ public class XBoxController extends Joystick implements ControlSchemeVisitor {
     public boolean isTriggerPressed(int trigger) {
         if(trigger != 2 && trigger != 3) return false;
         return (this.getRawAxis(trigger) > triggerTolerance) ? true : false;
-    }
-
-    /**
-     * Overridden method from ControlSchemeVisitor interface, provides a clean way to set commands to run on pressed.
-     */
-    public void visit(ControlSchemeOnPressedCommand command) {
-        if(buttonMap.containsKey(command.getButton())) {
-            buttonMap.get(command.getButton()).onTrue(command.getCommand());
-        } else if(povMap.containsKey(command.getButton())) {
-            povMap.get(command.getButton()).onTrue(command.getCommand());
-        }
-    }
-
-    /**
-     * Overridden method from ControlSchemeVisitor interface, provides a clean way to set commands to run on released.
-     */
-    public void visit(ControlSchemeOnReleasedCommand command) {
-        if(buttonMap.containsKey(command.getButton())) {
-            buttonMap.get(command.getButton()).onFalse(command.getCommand());
-        } else if(povMap.containsKey(command.getButton())) {
-            povMap.get(command.getButton()).onFalse(command.getCommand());
-        }
     }
 
 
