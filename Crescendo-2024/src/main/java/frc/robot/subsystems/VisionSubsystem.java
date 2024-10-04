@@ -9,9 +9,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Values;
+import frc.robot.lib.controls.XBoxController;
 
 import java.util.List;
 import java.util.NavigableMap;
@@ -33,6 +35,7 @@ public class VisionSubsystem extends SubsystemBase {
   private PhotonTrackedTarget speakerAimTarget;
   private boolean speakerAimTargetValid;
   private PhotonPoseEstimator visionPose;
+  private XBoxController driverController;
 
   private static NavigableMap<Double,Double> speakerLookup = new TreeMap<Double,Double>();
   static { //pitch, angle
@@ -144,5 +147,10 @@ public class VisionSubsystem extends SubsystemBase {
     //   SmartDashboard.putNumber("Yaw", speakerAimTarget.getYaw());
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
+    if (hasShotTarget()) {
+      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
+    } else {
+      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
+    }
   }
 }
