@@ -2,9 +2,6 @@ package frc.robot;
 
 import frc.robot.lib.controls.XBoxController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,7 +15,6 @@ public class IO {
     private double maxFeederSpeed;
     private double kScorerMaxPosition;
     private double ampPosition;
-    private double shooterMaxSpeed;
 
     private IO() {
         driverController = new XBoxController(0);
@@ -27,8 +23,6 @@ public class IO {
         maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
         kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
         ampPosition = Values.getInstance().getDoubleValue("ampPosition");
-        shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
-
         
     }
 public static IO getInstance() {

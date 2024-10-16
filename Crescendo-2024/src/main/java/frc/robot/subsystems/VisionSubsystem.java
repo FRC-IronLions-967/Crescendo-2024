@@ -145,6 +145,7 @@ public class VisionSubsystem extends SubsystemBase {
     if(hasShotTarget()) {
       driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     }
+    
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
     if (hasShotTarget()) {
       driverController.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
