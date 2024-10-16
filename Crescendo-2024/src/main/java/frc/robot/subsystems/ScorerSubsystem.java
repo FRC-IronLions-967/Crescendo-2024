@@ -4,12 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
@@ -17,7 +11,6 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -108,11 +101,7 @@ public class ScorerSubsystem extends SubsystemBase {
   }
 
   public boolean autoReadyToFire() {
-    if (scorerMotor.getEncoder().getVelocity() > 4600) {
-      return true;
-    }else {
-      return false;
-    }
+    return scorerMotor.getEncoder().getVelocity() > 4600;
   }
 
   public void stopScorer() {

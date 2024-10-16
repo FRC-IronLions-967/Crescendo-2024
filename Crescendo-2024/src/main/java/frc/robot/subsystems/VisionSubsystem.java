@@ -142,9 +142,8 @@ public class VisionSubsystem extends SubsystemBase {
     visionPose.update(result);
     getSpeakerTarget();
     
-    if(speakerAimTargetValid) {
-    //   SmartDashboard.putNumber("Pitch", speakerAimTarget.getPitch());
-    //   SmartDashboard.putNumber("Yaw", speakerAimTarget.getYaw());
+    if(hasShotTarget()) {
+      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
     if (hasShotTarget()) {
