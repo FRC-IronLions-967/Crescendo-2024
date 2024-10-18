@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IO;
 import frc.robot.Utils.Values;
 import frc.robot.lib.controls.XBoxController;
 
@@ -50,7 +51,7 @@ public class VisionSubsystem extends SubsystemBase {
     aprilTagCamera = new PhotonCamera("April_Tag_Camera");
     //Cam mounted facing backward, 0.298 meters behind center, 0.58 meters up from center.
     Transform3d robotToCam = new Transform3d(new Translation3d(-0.298, 0.0, 0.58), new Rotation3d(0,0.349,Math.PI)); 
-
+    driverController = IO.getInstance().getDriverController();
     visionPose = new PhotonPoseEstimator(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
   }
 
@@ -144,13 +145,9 @@ public class VisionSubsystem extends SubsystemBase {
     
     if(hasShotTarget()) {
       driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
-    }
-    
-    SmartDashboard.putBoolean("Has Target", hasShotTarget());
-    if (hasShotTarget()) {
-      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
     } else {
-      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
+      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
     }
+    SmartDashboard.putBoolean("Has Target", hasShotTarget());
   }
 }
