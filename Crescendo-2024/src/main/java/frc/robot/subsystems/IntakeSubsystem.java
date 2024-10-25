@@ -57,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
     pivotMotorPID.setD(Values.getInstance().getDoubleValue("intakePivotMotorD"));
     pivotMotorPID.setFF(Values.getInstance().getDoubleValue("intakePivotMotorFF"));
     pivotMotor.setClosedLoopRampRate(0.5);
-    pivotMotorPID.setPositionPIDWrappingEnabled(false);
+    pivotMotorPID.setPositionPIDWrappingEnabled(false); 
     pivotMotor.setSmartCurrentLimit(30);
 
     isNoteIn = new DigitalInput(2);
