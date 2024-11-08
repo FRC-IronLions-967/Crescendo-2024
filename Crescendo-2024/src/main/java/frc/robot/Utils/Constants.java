@@ -21,6 +21,8 @@ public final class Constants {
     public static final double kGearRatio = 6.75;
     //needs tunings
     public static final double kSecondsPerMinute = 60.0;
+
+    public static final double maxPitchToGetOject = 0.0;
   
     // private static final double kModuleMaxAngularVelocity = kMaxAngularSpeed;
     // private static final double kModuleMaxAngularAcceleration =

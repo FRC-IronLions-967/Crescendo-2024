@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
+import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 import frc.robot.lib.controls.XBoxController;
 
@@ -31,10 +32,14 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new VisionSubsystem. */
 
   private PhotonCamera aprilTagCamera;
+  private PhotonCamera objectDetectionCamera;
 
   private PhotonPipelineResult result;
+  private PhotonPipelineResult objectResult;
   private PhotonTrackedTarget speakerAimTarget;
+  private PhotonTrackedTarget bestObject;
   private boolean speakerAimTargetValid;
+  private boolean objectDetected;
   private PhotonPoseEstimator visionPose;
   private XBoxController driverController;
 
@@ -49,6 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem() {
     aprilTagCamera = new PhotonCamera("April_Tag_Camera");
+    objectDetectionCamera = new PhotonCamera("Object_Detection_Camera");
     //Cam mounted facing backward, 0.298 meters behind center, 0.58 meters up from center.
     Transform3d robotToCam = new Transform3d(new Translation3d(-0.298, 0.0, 0.58), new Rotation3d(0,0.349,Math.PI)); 
     driverController = IO.getInstance().getDriverController();
@@ -63,12 +69,20 @@ public class VisionSubsystem extends SubsystemBase {
     return speakerAimTargetValid;
   }
 
+  public boolean hasObject() {
+    return objectDetected;
+  }
+
   /**
    * 
    * @return
    */
   public boolean isAimed() {
     return speakerAimTargetValid && Math.abs(speakerAimTarget.getYaw()) < 0.5;
+  }
+
+  public boolean isCloseEnoughToStartPickUp() {
+    return objectDetected && bestObject.getPitch() >= Constants.maxPitchToGetOject;
   }
 
 
@@ -108,6 +122,14 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
+  public double getObjectYaw() {
+    if (objectDetected) {
+      return bestObject.getYaw();
+    } else {
+      return 0.0;
+    }
+  }
+
   /**
    * Processes the input of the april tag camera pipeline to identify the speaker april tag
    */
@@ -136,18 +158,29 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
+  private void getObjects() {
+    if (result.hasTargets()) {
+      bestObject = objectResult.getBestTarget();
+      objectDetected = true;
+    } else {
+      objectDetected = false;
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     result = aprilTagCamera.getLatestResult();
+    objectResult = objectDetectionCamera.getLatestResult();
     visionPose.update(result);
     getSpeakerTarget();
-    
+    getObjects();
     if(hasShotTarget()) {
       driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
     } else {
       driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
+    SmartDashboard.putBoolean("Has Object", hasObject());
   }
 }
