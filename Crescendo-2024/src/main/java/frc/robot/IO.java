@@ -67,6 +67,13 @@ public void teleopInit(){
         new TestRunFeeder(0)
     );
 
+    Command intakeNoteWithVision = new SequentialCommandGroup(
+        new ParallelCommandGroup(new ObjectVisionCommand(), new MoveToTransferPositionCommand()),
+        new RetractIntakeCommand(),
+        new TransferNoteCommand(),
+        new MoveToTransferPositionCommand()
+    );
+
     Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToTransferPositionCommand());
 
     Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
@@ -91,6 +98,7 @@ public void teleopInit(){
     driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
     driverController.whenButtonPressed("Y", new ResetGyro());
     driverController.whenButtonPressed("RBUMP", new VisualAimCommand());
+    driverController.whenButtonPressed("LBUMP", intakeNoteWithVision);
     driverController.whenButtonReleased("RBUMP", new DefaultMoveCommand());
 }
 public XBoxController getDriverController(){

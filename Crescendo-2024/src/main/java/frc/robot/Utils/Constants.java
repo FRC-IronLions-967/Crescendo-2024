@@ -22,7 +22,7 @@ public final class Constants {
     //needs tunings
     public static final double kSecondsPerMinute = 60.0;
 
-    public static final double maxPitchToGetOject = 0.0;
+    public static final double objectDetectionCameraYawOffset = 0.0;
   
     // private static final double kModuleMaxAngularVelocity = kMaxAngularSpeed;
     // private static final double kModuleMaxAngularAcceleration =

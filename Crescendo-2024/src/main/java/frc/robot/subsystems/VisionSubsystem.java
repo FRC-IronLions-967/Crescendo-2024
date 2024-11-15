@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
-import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 import frc.robot.lib.controls.XBoxController;
 
@@ -80,11 +79,6 @@ public class VisionSubsystem extends SubsystemBase {
   public boolean isAimed() {
     return speakerAimTargetValid && Math.abs(speakerAimTarget.getYaw()) < 0.5;
   }
-
-  public boolean isCloseEnoughToStartPickUp() {
-    return objectDetected && bestObject.getPitch() >= Constants.maxPitchToGetOject;
-  }
-
 
   /**
    * Computes shooter angle based on the speaker april tag location
