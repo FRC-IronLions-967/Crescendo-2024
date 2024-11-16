@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Utils.Values;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ScorerSubsystem;
 import frc.robot.subsystems.SubsystemsInstance;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -16,15 +17,17 @@ public class ObjectVisionCommand extends Command {
   private VisionSubsystem visionSubsystem;
   private Drivetrain drivetrain;
   private IntakeSubsystem intakeSubsystem;
+  private ScorerSubsystem scorerSubsystem;
   private double kIntakeMinPosition;
-  private double  intakeMaxSpeed;
+  private double intakeMaxSpeed;
 
   /** Creates a new ObjectVisionCommand. */
   public ObjectVisionCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     visionSubsystem = SubsystemsInstance.getInstance().visionSubsystem;
     drivetrain = SubsystemsInstance.getInstance().drivetrain;
-    intakeSubsystem = SubsystemsInstance .getInstance().intakesubsystem;
+    intakeSubsystem = SubsystemsInstance.getInstance().intakesubsystem;
+    scorerSubsystem = SubsystemsInstance.getInstance().scorersubsystem;
 
     kIntakeMinPosition = Values.getInstance().getDoubleValue("kIntakeMinPosition");
     intakeMaxSpeed = Values.getInstance().getDoubleValue("intakeMaxSpeed");
@@ -53,7 +56,7 @@ public class ObjectVisionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intakeSubsystem.isNoteIn();
+    return intakeSubsystem.isNoteIn() || scorerSubsystem.isNoteIn();
   }
 }
 

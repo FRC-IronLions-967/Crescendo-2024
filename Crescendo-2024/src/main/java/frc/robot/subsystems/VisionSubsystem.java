@@ -41,6 +41,14 @@ public class VisionSubsystem extends SubsystemBase {
   private boolean objectDetected;
   private PhotonPoseEstimator visionPose;
   private XBoxController driverController;
+  private int aimTargetCounter;
+  private int objectDetectedCounter;
+
+  private double pitchTarget = -12.0; //Degrees
+  private double yawTarget = -15.0; //Degrees
+  private double pitchTarget2 = 0.0; //Degrees
+  private double yawTarget2 = -22.8; //Degrees
+  //equation: f(y) = -1.54 * y - 35.07
 
   private static NavigableMap<Double,Double> speakerLookup = new TreeMap<Double,Double>();
   static { //pitch, angle
@@ -118,12 +126,16 @@ public class VisionSubsystem extends SubsystemBase {
 
   public double getObjectYaw() {
     if (objectDetected) {
-      return bestObject.getYaw();
+      double objSide = objectSideFunction(bestObject.getYaw());
+      return bestObject.getPitch() - objSide;
     } else {
       return 0.0;
     }
   }
 
+  private double objectSideFunction( double yaw) {
+    return -1.54 * yaw - 35.07;
+  }
   /**
    * Processes the input of the april tag camera pipeline to identify the speaker april tag
    */
@@ -145,19 +157,30 @@ public class VisionSubsystem extends SubsystemBase {
       for (java.util.Iterator<PhotonTrackedTarget> iter = targets.iterator(); iter.hasNext(); ) {
         aimTarget = iter.next();
         if (aimTarget.getFiducialId() == shotTargetId){
-          speakerAimTarget = aimTarget;
-          speakerAimTargetValid = true;
+          if (aimTargetCounter > 2) {
+            speakerAimTarget = aimTarget;
+            speakerAimTargetValid = true;
+          } else {
+            aimTargetCounter++;
+          }
         }
       }
+    } else {
+      aimTargetCounter = 0;
     }
   }
 
   private void getObjects() {
-    if (result.hasTargets()) {
-      bestObject = objectResult.getBestTarget();
-      objectDetected = true;
+    if (objectResult.hasTargets()) {
+      if (objectDetectedCounter > 2) {
+        bestObject = objectResult.getBestTarget();
+        objectDetected = true;
+      } else {
+        objectDetectedCounter++;
+      }
     } else {
       objectDetected = false;
+      objectDetectedCounter = 0;
     }
   }
 
@@ -169,12 +192,22 @@ public class VisionSubsystem extends SubsystemBase {
     visionPose.update(result);
     getSpeakerTarget();
     getObjects();
-    if(hasShotTarget()) {
-      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
+
+    if(hasShotTarget() && DriverStation.isTeleopEnabled()) {
+      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
+    } else {
+      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+    }
+    if(hasObject() && DriverStation.isTeleopEnabled()) {
+      if(!SubsystemsInstance.getInstance().intakesubsystem.isNoteIn() || !SubsystemsInstance.getInstance().scorersubsystem.isNoteIn()) {
+        driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+      }
     } else {
       driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
     SmartDashboard.putBoolean("Has Object", hasObject());
+
+
   }
 }

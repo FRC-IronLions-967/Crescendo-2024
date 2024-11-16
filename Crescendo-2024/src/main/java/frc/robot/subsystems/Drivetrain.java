@@ -271,7 +271,8 @@ public class Drivetrain extends SubsystemBase {
    */
   public void lockonMoveTowardsObject(double rotation) {
       if ( DriverStation.isTeleop() ) {
-        drive(5, 0, -0.1 * rotation, fieldRelative);
+        SmartDashboard.putNumber("Rotation", -0.1 * rotation);
+        drive(1.0, 0, -0.05 * rotation, false);
       }
   }  
 
