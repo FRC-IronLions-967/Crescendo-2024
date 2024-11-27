@@ -37,13 +37,18 @@ public class ObjectVisionCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {} 
+  public void initialize() {
+    intakeSubsystem.moveIntake(kIntakeMinPosition);
+  } 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.lockonMoveTowardsObject(visionSubsystem.getObjectYaw());
-    intakeSubsystem.moveIntake(kIntakeMinPosition);
+    if (intakeSubsystem.getIntakePosition() == kIntakeMinPosition) {
+    drivetrain.lockonMoveTowardsObject(visionSubsystem.getObjectYaw(), 3);
+    } else {
+      drivetrain.lockonMoveTowardsObject(visionSubsystem.getObjectYaw(), 0.25);
+    }
     intakeSubsystem.runIntake(intakeMaxSpeed);
   }
 

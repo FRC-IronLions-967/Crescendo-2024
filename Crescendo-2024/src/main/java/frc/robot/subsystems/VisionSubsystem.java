@@ -44,10 +44,10 @@ public class VisionSubsystem extends SubsystemBase {
   private int aimTargetCounter;
   private int objectDetectedCounter;
 
-  private double pitchTarget = -12.0; //Degrees
-  private double yawTarget = -15.0; //Degrees
-  private double pitchTarget2 = 0.0; //Degrees
-  private double yawTarget2 = -22.8; //Degrees
+  // private double pitchTarget = -12.0; //Degrees
+  // private double yawTarget = -15.0; //Degrees
+  // private double pitchTarget2 = 0.0; //Degrees
+  // private double yawTarget2 = -22.8; //Degrees
   //equation: f(y) = -1.54 * y - 35.07
 
   private static NavigableMap<Double,Double> speakerLookup = new TreeMap<Double,Double>();
@@ -196,14 +196,14 @@ public class VisionSubsystem extends SubsystemBase {
     if(hasShotTarget() && DriverStation.isTeleopEnabled()) {
       driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
     } else {
-      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
     }
     if(hasObject() && DriverStation.isTeleopEnabled()) {
       if(!SubsystemsInstance.getInstance().intakesubsystem.isNoteIn() || !SubsystemsInstance.getInstance().scorersubsystem.isNoteIn()) {
         driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
       }
     } else {
-      driverController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+      driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
     }
     SmartDashboard.putBoolean("Has Target", hasShotTarget());
     SmartDashboard.putBoolean("Has Object", hasObject());
