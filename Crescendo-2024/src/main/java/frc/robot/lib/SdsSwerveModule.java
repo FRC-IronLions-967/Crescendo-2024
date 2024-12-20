@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -102,8 +103,8 @@ public class SdsSwerveModule {
     turningPIDController.setI(swerveTurningI);
     turningPIDController.setD(swerveTurningD);
 
-    if (turnID == 4) {
-      driveMotor.setInverted(true);
+    if (true) {
+      driveMotor.setInverted(true); 
     } else {
       driveMotor.setInverted(false);
     }

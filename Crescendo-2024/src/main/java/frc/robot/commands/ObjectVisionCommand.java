@@ -44,7 +44,7 @@ public class ObjectVisionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (intakeSubsystem.getIntakePosition() == kIntakeMinPosition) {
+    if (intakeSubsystem.getIntakePosition() < kIntakeMinPosition + 0.05 && intakeSubsystem.getIntakePosition() > kIntakeMinPosition - 0.05) {
     drivetrain.lockonMoveTowardsObject(visionSubsystem.getObjectYaw(), 3);
     } else {
       drivetrain.lockonMoveTowardsObject(visionSubsystem.getObjectYaw(), 0.25);
