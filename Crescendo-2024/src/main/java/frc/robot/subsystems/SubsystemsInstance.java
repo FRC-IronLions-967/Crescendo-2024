@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.DefaultMoveCommand;
 import frc.robot.lib.LEDController;
 
 public class SubsystemsInstance {

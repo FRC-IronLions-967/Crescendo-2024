@@ -2,9 +2,6 @@ package frc.robot;
 
 import frc.robot.lib.controls.XBoxController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,7 +15,6 @@ public class IO {
     private double maxFeederSpeed;
     private double kScorerMaxPosition;
     private double ampPosition;
-    private double shooterMaxSpeed;
 
     private IO() {
         driverController = new XBoxController(0);
@@ -27,8 +23,6 @@ public class IO {
         maxFeederSpeed = Values.getInstance().getDoubleValue("maxFeederSpeed");
         kScorerMaxPosition = Values.getInstance().getDoubleValue("kScorerMaxPosition");
         ampPosition = Values.getInstance().getDoubleValue("ampPosition");
-        shooterMaxSpeed = Values.getInstance().getDoubleValue("shooterMaxSpeed");
-
         
     }
 public static IO getInstance() {
@@ -73,6 +67,13 @@ public void teleopInit(){
         new TestRunFeeder(0)
     );
 
+    Command intakeNoteWithVision = new SequentialCommandGroup(
+        new ParallelCommandGroup(new ObjectVisionCommand(), new MoveToTransferPositionCommand()),
+        new ParallelCommandGroup(new DefaultMoveCommand(), new RetractIntakeCommand()),
+        new ParallelCommandGroup(new DefaultMoveCommand(), new TransferNoteCommand()),
+        new ParallelCommandGroup(new MoveToTransferPositionCommand(), new DefaultMoveCommand())
+    );
+
     Command sourceLoad = new SequentialCommandGroup(new MoveToSourcePositionCommand(), new MoveToTransferPositionCommand());
 
     Command handOff = new ParallelCommandGroup(new TestRunFeeder(maxFeederSpeed), new TestRunIntake(-maxFeederSpeed));
@@ -97,7 +98,9 @@ public void teleopInit(){
     driverController.whenButtonPressed("SELECT", new ChangeFieldRelativeCommand());
     driverController.whenButtonPressed("Y", new ResetGyro());
     driverController.whenButtonPressed("RBUMP", new VisualAimCommand());
+    driverController.whenButtonPressed("LBUMP", intakeNoteWithVision);
     driverController.whenButtonReleased("RBUMP", new DefaultMoveCommand());
+    driverController.whenButtonReleased("LBUMP", new DefaultMoveCommand());
 }
 public XBoxController getDriverController(){
     return driverController;

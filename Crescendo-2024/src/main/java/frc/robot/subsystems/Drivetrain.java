@@ -265,6 +265,17 @@ public class Drivetrain extends SubsystemBase {
       }
   }
 
+  /**
+   * Drive the robot using sensor inputs for the rotation and driver input translation.
+   * @param rotation rot/sec
+   */
+  public void lockonMoveTowardsObject(double rotation, double speed) {
+      if ( DriverStation.isTeleop() ) {
+        SmartDashboard.putNumber("Rotation", -0.1 * rotation);
+        drive(speed, 0, -0.05 * rotation, false);
+      }
+  }  
+
   
 
   /**

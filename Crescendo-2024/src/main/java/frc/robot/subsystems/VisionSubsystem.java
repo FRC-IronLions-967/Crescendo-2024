@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IO;
 import frc.robot.Utils.Values;
 import frc.robot.lib.controls.XBoxController;
 
@@ -30,12 +31,24 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new VisionSubsystem. */
 
   private PhotonCamera aprilTagCamera;
+  private PhotonCamera objectDetectionCamera;
 
   private PhotonPipelineResult result;
+  private PhotonPipelineResult objectResult;
   private PhotonTrackedTarget speakerAimTarget;
+  private PhotonTrackedTarget bestObject;
   private boolean speakerAimTargetValid;
+  private boolean objectDetected;
   private PhotonPoseEstimator visionPose;
   private XBoxController driverController;
+  private int aimTargetCounter;
+  private int objectDetectedCounter;
+
+  // private double pitchTarget = -12.0; //Degrees
+  // private double yawTarget = -15.0; //Degrees
+  // private double pitchTarget2 = 0.0; //Degrees
+  // private double yawTarget2 = -22.8; //Degrees
+  //equation: f(y) = -1.54 * y - 35.07
 
   private static NavigableMap<Double,Double> speakerLookup = new TreeMap<Double,Double>();
   static { //pitch, angle
@@ -48,9 +61,10 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem() {
     aprilTagCamera = new PhotonCamera("April_Tag_Camera");
+    objectDetectionCamera = new PhotonCamera("Object_Detection_Camera");
     //Cam mounted facing backward, 0.298 meters behind center, 0.58 meters up from center.
     Transform3d robotToCam = new Transform3d(new Translation3d(-0.298, 0.0, 0.58), new Rotation3d(0,0.349,Math.PI)); 
-
+    driverController = IO.getInstance().getDriverController();
     visionPose = new PhotonPoseEstimator(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
   }
 
@@ -62,6 +76,10 @@ public class VisionSubsystem extends SubsystemBase {
     return speakerAimTargetValid;
   }
 
+  public boolean hasObject() {
+    return objectDetected;
+  }
+
   /**
    * 
    * @return
@@ -69,7 +87,6 @@ public class VisionSubsystem extends SubsystemBase {
   public boolean isAimed() {
     return speakerAimTargetValid && Math.abs(speakerAimTarget.getYaw()) < 0.5;
   }
-
 
   /**
    * Computes shooter angle based on the speaker april tag location
@@ -107,6 +124,18 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
+  public double getObjectYaw() {
+    if (objectDetected) {
+      double objSide = objectSideFunction(bestObject.getYaw());
+      return bestObject.getPitch() - objSide;
+    } else {
+      return 0.0;
+    }
+  }
+
+  private double objectSideFunction( double yaw) {
+    return -1.54 * yaw - 35.07;
+  }
   /**
    * Processes the input of the april tag camera pipeline to identify the speaker april tag
    */
@@ -128,10 +157,30 @@ public class VisionSubsystem extends SubsystemBase {
       for (java.util.Iterator<PhotonTrackedTarget> iter = targets.iterator(); iter.hasNext(); ) {
         aimTarget = iter.next();
         if (aimTarget.getFiducialId() == shotTargetId){
-          speakerAimTarget = aimTarget;
-          speakerAimTargetValid = true;
+          if (aimTargetCounter > 2) {
+            speakerAimTarget = aimTarget;
+            speakerAimTargetValid = true;
+          } else {
+            aimTargetCounter++;
+          }
         }
       }
+    } else {
+      aimTargetCounter = 0;
+    }
+  }
+
+  private void getObjects() {
+    if (objectResult.hasTargets()) {
+      if (objectDetectedCounter > 2) {
+        bestObject = objectResult.getBestTarget();
+        objectDetected = true;
+      } else {
+        objectDetectedCounter++;
+      }
+    } else {
+      objectDetected = false;
+      objectDetectedCounter = 0;
     }
   }
 
@@ -139,18 +188,26 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     result = aprilTagCamera.getLatestResult();
+    objectResult = objectDetectionCamera.getLatestResult();
     visionPose.update(result);
     getSpeakerTarget();
-    
-    if(speakerAimTargetValid) {
-    //   SmartDashboard.putNumber("Pitch", speakerAimTarget.getPitch());
-    //   SmartDashboard.putNumber("Yaw", speakerAimTarget.getYaw());
-    }
-    SmartDashboard.putBoolean("Has Target", hasShotTarget());
-    if (hasShotTarget()) {
-      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 1.0);
+    getObjects();
+
+    if(hasShotTarget() && DriverStation.isTeleopEnabled()) {
+      driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.5);
     } else {
       driverController.setRumble(GenericHID.RumbleType.kRightRumble, 0.0);
     }
+    if(hasObject() && DriverStation.isTeleopEnabled()) {
+      if(!SubsystemsInstance.getInstance().intakesubsystem.isNoteIn() || !SubsystemsInstance.getInstance().scorersubsystem.isNoteIn()) {
+        driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+      }
+    } else {
+      driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+    }
+    SmartDashboard.putBoolean("Has Target", hasShotTarget());
+    SmartDashboard.putBoolean("Has Object", hasObject());
+
+
   }
 }

@@ -5,22 +5,18 @@
 package frc.robot.lib;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.SparkAbsoluteEncoder;
 
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Values;
 
@@ -107,8 +103,8 @@ public class SdsSwerveModule {
     turningPIDController.setI(swerveTurningI);
     turningPIDController.setD(swerveTurningD);
 
-    if (turnID == 4) {
-      driveMotor.setInverted(true);
+    if (true) {
+      driveMotor.setInverted(true); 
     } else {
       driveMotor.setInverted(false);
     }
